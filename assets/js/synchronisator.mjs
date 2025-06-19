@@ -7,7 +7,7 @@
  */
 
 // Import intelligent channel to color mapping (reads from CSS)
-import { createChannelColorMapping, logChannelMapping } from '/assets/js/channel2colour.js';
+import { createChannelColorMapping, logChannelMapping } from './channel2colour.js';
 
 export class Synchronisator {
   constructor(syncData, audioElement, svgElement, config) {
