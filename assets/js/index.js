@@ -1,11 +1,12 @@
 // Import unified timing system
 import { Synchronisator } from './synchronisator.mjs';
-
 // Import intelligent channel to color mapping (reads from CSS)
 import { createChannelColorMapping, logChannelMapping } from './channel2colour.js';
 
 // Import BWV navigation menu system  
 import { initializeBWVNavigation, adjustBWVButtonLayout } from './menu.js';
+// Import debounce utility
+import debounce from './lodash.build.mjs';
 
 import MusicalHighlighter, { quickHighlight, FuguePresets } from './musical-highlighter.js';
 
@@ -203,6 +204,21 @@ async function loadConfiguration(workId = null) {
   try {
     // Use provided workId or get from URL
     const targetWorkId = workId || processWerkParameter();
+
+    // Work Title, displayed as text
+    const workTitle = targetWorkId.replace('_', ' ');
+    const workTitleContainer = document.getElementById('bwv-buttons-container');
+    workTitleContainer.setAttribute('style', 'height: 24px !important;');
+    const workTitleElement = document.createElement('h5');
+    workTitleElement.textContent = workTitle;
+
+    if (!workTitleContainer) {
+      console.error('❌ Work title container not found');
+      return;
+    }
+    workTitleContainer.innerHTML = '';
+    workTitleContainer.appendChild(workTitleElement);
+    // End work title display 
     
     const element = document.getElementById('loading-werk');
     if (element) {
@@ -220,9 +236,15 @@ async function loadConfiguration(workId = null) {
 
     // Update file paths for new unified format
     const basePath = `${ROOT_LAGU}/${targetWorkId}/exports/`;
-    CONFIG.files.svgPath = `${basePath}${targetWorkId}.svg`;
-    CONFIG.files.syncPath = `${basePath}${targetWorkId}.yaml`;
-    CONFIG.files.audioPath = `${basePath}${CONFIG.files.audioPath}`;
+    
+    // Use config values or fall back to default naming convention
+    const svgFileName = CONFIG.files.svgPath || `${targetWorkId}.svg`;
+    const syncFileName = CONFIG.files.syncPath || `${targetWorkId}.yaml`;
+    const audioFileName = CONFIG.files.audioPath || `${targetWorkId}.wav`;
+    
+    CONFIG.files.svgPath = `${basePath}${svgFileName}`;
+    CONFIG.files.syncPath = `${basePath}${syncFileName}`;
+    CONFIG.files.audioPath = `${basePath}${audioFileName}`;
 
     // Store the workId for reference
     CONFIG.workId = targetWorkId;
@@ -327,27 +349,42 @@ async function loadWorkContent(workId, isInitialLoad = false) {
       throw new Error("SVG element not found in loaded content");
     }
 
-    // 4. Stop current audio and sync (only if not initial load)
+    // 4. Clean up previous sync if it exists (before changing audio time)
+    if (sync) {
+      sync.stop();
+      sync.cleanup(); // Clean up event listeners
+      sync = null;
+    }
+    
+    // Stop current audio (only if not initial load)
     if (!isInitialLoad) {
       audio.pause();
       audio.currentTime = 0;
-    }
-    
-    // Clean up previous sync if it exists
-    if (sync) {
-      sync.stop();
-      sync = null;
     }
 
     // 5. Initialize new synchronization system
     sync = new Synchronisator(syncData, audio, svgGlobal, CONFIG);
     window.sync = sync; // Make globally accessible
 
-    // Set up custom bar display callback
-    sync.onBarChange = (barNumber) => {
-      currentBarGlobal.innerText = barNumber;
-      scrollToBar(barNumber);
-    };
+    // Small delay to avoid any residual seeking events from currentTime change
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    // Initialize audio event handlers with UI callbacks
+    sync.initializeAudioEventHandlers({
+      onPlayStateChange: (isPlaying) => {
+        setPlayingState(isPlaying);
+      },
+      onBarChange: (barNumber) => {
+        currentBarGlobal.innerText = barNumber;
+        scrollToBar(barNumber);
+      },
+      onSeekStart: () => {
+        bodyGlobal?.classList.add('seeking');
+      },
+      onSeekEnd: () => {
+        bodyGlobal?.classList.remove('seeking');
+      }
+    });
 
     // 6. Apply channel colors and other work-specific features
     applyChannelColors(syncData);
@@ -367,8 +404,8 @@ async function loadWorkContent(workId, isInitialLoad = false) {
     // 9. Update UI state (only reset highlights if not initial load)
     if (isInitialLoad) {
       // Just set the current bar, don't try to clear highlights yet
-      if (currentBarGlobal) {
-        currentBarGlobal.innerText = '1';
+      if (currentBarGlobal && sync) {
+        currentBarGlobal.innerText = sync.firstBarNumber?.toString() || '1';
       }
       setPlayingState(false);
     } else {
@@ -383,7 +420,7 @@ async function loadWorkContent(workId, isInitialLoad = false) {
       loadingElement.classList.add('d-none');
     }
 
-    console.log(`✅ Successfully loaded ${workId}: ${sync.getStats().totalNotes} notes, ${sync.barElementsCache.size} bars`);
+    console.log(`✅ Successfully loaded ${workId}: ${sync.getStats().totalNotes} notes, ${sync.barCache.length} bars`);
     
     return true;
 
@@ -396,8 +433,8 @@ async function loadWorkContent(workId, isInitialLoad = false) {
 
 // Reset current bar display
 function updatePlaybackState() {
-  if (currentBarGlobal) {
-    currentBarGlobal.innerText = '1';
+  if (currentBarGlobal && sync) {
+    currentBarGlobal.innerText = sync.firstBarNumber?.toString() || '1';
   }
   
   // Reset playing state
@@ -442,8 +479,10 @@ function checkScrollButtonVisibility() {
 function scrollToBar(barNumber) {
   if (!sync) return;
 
-  const barElements = sync.barElementsCache.get(barNumber);
-  if (!barElements || barElements.length === 0) return;
+  const barData = sync.barCache[barNumber];
+  if (!barData || !barData.elements || barData.elements.length === 0) return;
+  
+  const barElements = barData.elements;
 
   let minTop = Infinity, maxBottom = -Infinity;
   barElements.forEach(barElement => {
@@ -527,18 +566,6 @@ function positionButtons() {
 // =============================================================================
 // PERFORMANCE OPTIMIZATION
 // =============================================================================
-
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
 
 const debouncedPositionButtons = debounce(positionButtons, 50);
 const debouncedCheckScroll = debounce(checkScrollButtonVisibility, 50);
@@ -660,38 +687,7 @@ function initEventHandlers() {
 
   window.addEventListener('scroll', debouncedCheckScroll);
 
-  // Audio event handlers - these work with any sync instance
-  audio.addEventListener("play", () => {
-    setPlayingState(true);
-    sync?.start();
-  });
-
-  audio.addEventListener("pause", () => {
-    setPlayingState(false);
-    sync?.stop();
-  });
-
-  audio.addEventListener("ended", () => {
-    setPlayingState(false);
-    sync?.stop();
-    audio.currentTime = 0;
-  });
-
-  // Seeking handlers
-  let seekingTimeout;
-  audio.addEventListener('seeking', () => {
-    bodyGlobal?.classList.add('seeking');
-    clearTimeout(seekingTimeout);
-    sync?.seek(audio.currentTime);
-  });
-
-  audio.addEventListener("seeked", () => {
-    clearTimeout(seekingTimeout);
-    seekingTimeout = setTimeout(() => {
-      bodyGlobal?.classList.remove('seeking');
-    }, 1000);
-    sync?.seek(audio.currentTime);
-  });
+  // Audio event handlers are now managed by Synchronisator.initializeAudioEventHandlers()
 }
 
 // =============================================================================

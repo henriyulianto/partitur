@@ -56,6 +56,9 @@
         path[data-ref] {
             fill: currentColor;
         }
+        a.notangka {
+            fill: currentColor;
+        }
         
         /* Staff lines and other paths */
         path:not([data-ref]) {

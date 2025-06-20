@@ -8,6 +8,8 @@
 
 // Import intelligent channel to color mapping (reads from CSS)
 import { createChannelColorMapping, logChannelMapping } from './channel2colour.js';
+// Import lodash utilities
+import debounce, { sortedIndex } from './lodash.build.mjs';
 
 export class Synchronisator {
   constructor(syncData, audioElement, svgElement, config) {
@@ -36,33 +38,33 @@ export class Synchronisator {
     this.audio = audioElement;
     this.svg = svgElement;
     this.config = config;
-    
+
     // Timing state
     this.isPlaying = false;
     this.currentVisibleBar = -1;
     this.animationId = null;
-    
+
     // Note management
     this.notes = [];
     this.remainingNotes = [];
     this.activeNotes = [];
-    
+
     // Channel color mapping
     this.channelColorMap = new Map();
-    
-    // Performance: Cache DOM elements
-    this.barElementsCache = new Map(); // barNumber -> elements[]
+
+    // Performance: Cache DOM elements and computed data
+    this.barCache = []; // barNumber -> {elements, startTime} (direct array access)
     this.noteElementsCache = new Map(); // data-ref -> elements[]
-    
-    // Callbacks
-    this.onBarChange = null; // Callback for when bar changes
-    
+    this.barStartTimesCache = null; // Cached start times array for binary search
+    this.firstBarNumber = null; // First available bar number (could be 0 for anacrusis)
+    this.visualLeadTime = this.config.musicalStructure.visualLeadTimeSeconds || 0; // Cached lead time
+
     // console.log('🎼 Synchronisator initializing with data:', {
     //   meta: this.syncData.meta,
     //   flowItems: this.syncData.flow?.length,
     //   configTitle: this.config.workInfo?.title
     // });
-    
+
     this.initialize();
   }
 
@@ -73,6 +75,7 @@ export class Synchronisator {
   initialize() {
     this.buildElementCaches();
     this.processNotes();
+    this.buildBarTimingsCache();
     this.setupChannelColorMapping();
     // console.log(`🎼 Synchronisator initialized: ${this.notes.length} notes, ${this.barElementsCache.size} bars`);
   }
@@ -81,23 +84,23 @@ export class Synchronisator {
     // Cache bar elements
     const barElements = this.svg.querySelectorAll('[data-bar]');
     // console.log(`🔍 Found ${barElements.length} bar elements`);
-    
+
     barElements.forEach(element => {
       const barNumber = parseInt(element.getAttribute('data-bar'));
-      if (!this.barElementsCache.has(barNumber)) {
-        this.barElementsCache.set(barNumber, []);
+      if (!this.barCache[barNumber]) {
+        this.barCache[barNumber] = { elements: [], startTime: null };
       }
-      this.barElementsCache.get(barNumber).push(element);
+      this.barCache[barNumber].elements.push(element);
     });
 
     // Cache note elements  
     const noteElements = this.svg.querySelectorAll('[data-ref]');
     // console.log(`🔍 Found ${noteElements.length} note elements with data-ref`);
-    
+
     if (noteElements.length === 0) {
       console.warn('⚠️  No elements with data-ref found! Check SVG structure.');
       // Debug: show first few elements in SVG
-      const allPaths = this.svg.querySelectorAll('path');
+      // const allPaths = this.svg.querySelectorAll('path');
       // console.log('📋 First 3 path elements:', Array.from(allPaths).slice(0, 3).map(el => ({
       //   attributes: Object.fromEntries(Array.from(el.attributes).map(attr => [attr.name, attr.value]))
       // })));
@@ -111,30 +114,61 @@ export class Synchronisator {
       this.noteElementsCache.get(dataRef).push(element);
     });
 
-    // console.log(`📊 Cached elements: ${this.barElementsCache.size} bars, ${this.noteElementsCache.size} unique note refs`);
+    // console.log(`📊 Cached elements: ${this.barCache.length} bars, ${this.noteElementsCache.size} unique note refs`);
+  }
+
+  buildBarTimingsCache() {
+    // Pre-compute bar timings and populate barCache with startTime
+    const barTimings = this.syncData.flow
+      .filter(item => item.length === 4 && item[3] === 'bar')
+      .map(([tick, , barNumber]) => ({
+        barNumber,
+        startTime: this.tickToSeconds(tick)
+      }))
+      .sort((a, b) => a.startTime - b.startTime);
+    
+    // Populate barCache with timing data and track first bar
+    barTimings.forEach(({ barNumber, startTime }) => {
+      if (this.firstBarNumber === null || barNumber < this.firstBarNumber) {
+        this.firstBarNumber = barNumber;
+      }
+      
+      if (!this.barCache[barNumber]) {
+        this.barCache[barNumber] = { elements: [], startTime };
+      } else {
+        this.barCache[barNumber].startTime = startTime;
+      }
+    });
+    
+    // Cache start times array for efficient binary search
+    this.barStartTimesCache = barTimings.map(bar => bar.startTime);
+    this.barNumbersCache = barTimings.map(bar => bar.barNumber);
   }
 
   processNotes() {
-    // Extract notes from flow data (filter out bars, handle new format)
+    // Extract notes from flow data (filter out bars and fermatas)
     const flowNotes = this.syncData.flow
-      .filter(item => item.length >= 3 && item[3] !== 'bar') // Notes have 3-4 elements, bars have 'bar' as 4th element
+      .filter(item => item.length >= 3 && item[3] !== 'bar' && item[3] !== 'fermata') // Filter out bars and fermatas
       .map(item => {
         // New format: [start_tick, channel, end_tick, hrefs]
         const [startTick, channel, endTick, hrefs] = item;
-        
+
+        const startTime = this.tickToSeconds(startTick);
+        const endTime = this.tickToSeconds(endTick);
+
         return {
           startTick,
           endTick,
           hrefs: Array.isArray(hrefs) ? hrefs : [hrefs],
-          channel: channel || 0, // Channel is now at index 1
-          startTime: this.tickToSeconds(startTick),
-          endTime: this.tickToSeconds(endTick),
+          channel: channel || 0, 
+          startTime,
+          endTime,
           elements: this.getElementsForHrefs(hrefs)
         };
       });
 
     // console.log(`🎵 Processing ${flowNotes.length} notes from flow data`);
-    
+
     // Debug first few notes with channel info
     // if (flowNotes.length > 0) {
     //   console.log('📝 First 3 notes:', flowNotes.slice(0, 3).map(note => ({
@@ -151,7 +185,7 @@ export class Synchronisator {
     if (notesWithoutElements.length > 0) {
       console.warn(`⚠️  ${notesWithoutElements.length} notes have no matching SVG elements`);
       // console.log('🔍 Sample missing hrefs:', notesWithoutElements.slice(0, 5).map(n => n.hrefs));
-      
+
       // Show available data-ref values for comparison
       // const availableRefs = Array.from(this.noteElementsCache.keys()).slice(0, 10);
       // console.log('📋 Available data-ref values (first 10):', availableRefs);
@@ -159,17 +193,17 @@ export class Synchronisator {
 
     // Sort by start time (notes should already be sorted by the Python script)
     this.notes = flowNotes.sort((a, b) => a.startTime - b.startTime);
-    
-    const notesWithElements = this.notes.filter(note => note.elements.length > 0);
+
+    // const notesWithElements = this.notes.filter(note => note.elements.length > 0);
     // console.log(`✅ ${notesWithElements.length}/${this.notes.length} notes have matching SVG elements`);
-    
+
     // Log channel distribution
     // const channelCounts = {};
     // this.notes.forEach(note => {
     //   channelCounts[note.channel] = (channelCounts[note.channel] || 0) + 1;
     // });
     // console.log('🎨 Channel distribution:', channelCounts);
-    
+
     this.resetNoteState();
   }
 
@@ -179,10 +213,10 @@ export class Synchronisator {
       try {
         // Convert meta.channels to the format expected by createChannelColorMapping
         const channelData = [];
-        
+
         for (const [channelStr, stats] of Object.entries(this.syncData.meta.channels)) {
           const channel = parseInt(channelStr);
-          
+
           // Create mock note data with just the info needed for mapping
           for (let i = 0; i < stats.count; i++) {
             channelData.push({
@@ -191,12 +225,12 @@ export class Synchronisator {
             });
           }
         }
-        
+
         // console.log('🎨 Using channel statistics from meta.channels:', this.syncData.meta.channels);
-        
+
         // Create mapping using the intelligent system from channel2colour.js
         this.channelColorMap = createChannelColorMapping(channelData);
-        
+
         // Apply color classes to all note elements
         this.notes.forEach(note => {
           const colorIndex = this.channelColorMap.get(note.channel);
@@ -213,7 +247,7 @@ export class Synchronisator {
         // } else {
         //   console.log('🎵 No channel mapping applied (single channel or no channel data)');
         // }
-        
+
       } catch (error) {
         console.error('🚨 Error setting up channel color mapping from meta:', error);
         this.fallbackChannelMapping();
@@ -236,7 +270,7 @@ export class Synchronisator {
 
   getElementsForHrefs(hrefs) {
     const hrefArray = Array.isArray(hrefs) ? hrefs : [hrefs];
-    return hrefArray.flatMap(href => 
+    return hrefArray.flatMap(href =>
       this.noteElementsCache.get(href) || []
     ).filter(Boolean);
   }
@@ -246,53 +280,38 @@ export class Synchronisator {
   // =============================================================================
 
   tickToSeconds(tick) {
-    if (!this.syncData.meta) {
-      throw new Error('tickToSeconds: syncData.meta is null');
-    }
-    
-    const { minTick, maxTick } = this.syncData.meta;
-    
-    if (minTick === undefined || maxTick === undefined) {
-      console.error('Meta data:', this.syncData.meta);
-      throw new Error('tickToSeconds: minTick or maxTick is undefined');
-    }
-    
-    if (maxTick === minTick) {
-      console.warn('tickToSeconds: maxTick equals minTick, returning 0');
-      return 0;
-    }
-    
+    // Convert tick to seconds using proportional mapping
+    // Maps tick range [minTick, maxTick] to musical duration, then adds musicStartSeconds offset
+    const { minTick, maxTick, musicStartSeconds } = this.syncData.meta;
     const totalDuration = this.config.musicalStructure.totalDurationSeconds;
-    if (!totalDuration) {
-      throw new Error('tickToSeconds: totalDurationSeconds is missing from config');
+    const musicalDuration = totalDuration - (musicStartSeconds || 0);
+
+    if (maxTick === minTick) {
+      return musicStartSeconds || 0;
     }
-    
-    return ((tick - minTick) / (maxTick - minTick)) * totalDuration;
+
+    // Map ticks to musical duration, then offset by silence
+    const musicalTime = ((tick - minTick) / (maxTick - minTick)) * musicalDuration;
+    const result = musicalTime + (musicStartSeconds || 0);
+
+    // Debug first few ticks
+    // if (tick <= 2500) {
+    //   console.log(`🔍 DEBUGGING tick ${tick}: minTick=${minTick}, maxTick=${maxTick}, musicStartSeconds=${musicStartSeconds}, totalDuration=${totalDuration}, musicalDuration=${musicalDuration}, musicalTime=${musicalTime.toFixed(3)}, result=${result.toFixed(3)}`);
+    // }
+
+    return result;
   }
 
   getCurrentBar(currentTime) {
-    // Extract bar data from flow - bars are still [tick, None, bar_number, 'bar']
-    const barTimings = this.syncData.flow
-      .filter(item => item.length === 4 && item[3] === 'bar')
-      .map(([tick, , barNumber]) => ({
-        barNumber,
-        startTime: this.tickToSeconds(tick)
-      }))
-      .sort((a, b) => a.startTime - b.startTime);
-
-    // Find current bar
-    for (let i = barTimings.length - 1; i >= 0; i--) {
-      if (currentTime >= barTimings[i].startTime) {
-        return barTimings[i].barNumber;
-      }
-    }
-
-    return barTimings[0]?.barNumber || 1;
+    // Use binary search - if no bars or before first bar, return -1
+    const index = sortedIndex(this.barStartTimesCache, currentTime);
+    const timingIndex = index - 1;
+    
+    return timingIndex >= 0 ? this.barNumbersCache[timingIndex] : -1;
   }
 
   getVisualTime() {
-    const leadTime = this.config.musicalStructure.visualLeadTimeSeconds || 0;
-    return this.audio.currentTime + leadTime;
+    return this.audio.currentTime + this.visualLeadTime;
   }
 
   // =============================================================================
@@ -301,53 +320,65 @@ export class Synchronisator {
 
   start() {
     if (this.isPlaying) return;
-    
+
     this.isPlaying = true;
     this.syncLoop();
-    
+
     // console.log('🎵 Playback started');
   }
 
   stop() {
     if (!this.isPlaying) return;
-    
+
     this.isPlaying = false;
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
       this.animationId = null;
     }
-    
+
     this.clearAllHighlights();
-    this.hideAllBars();
+    this.showBar(-1)
     this.resetNoteState();
-    
+
     // console.log('⏹️ Playback stopped');
   }
 
-  seek(targetTime) {
-    const visualTime = targetTime + (this.config.musicalStructure.visualLeadTimeSeconds || 0);
-    
-    // Reset note states based on seek position
-    this.remainingNotes = this.notes.filter(note => note.startTime > visualTime);
-    this.activeNotes = this.notes.filter(note => 
-      note.startTime <= visualTime && note.endTime > visualTime
+  updateVisualSync(targetTime) {
+    // Reset note states based on target time
+    this.remainingNotes = this.notes.filter(note => note.startTime > targetTime);
+    this.activeNotes = this.notes.filter(note =>
+      note.startTime <= targetTime && note.endTime > targetTime
     );
-    
+
     // Update visual state
     this.clearAllHighlights();
     this.activeNotes.forEach(note => this.highlightNote(note));
-    
+
     // Update bar visibility
-    const currentBar = this.getCurrentBar(visualTime);
+    const currentBar = this.getCurrentBar(targetTime);
     this.showBar(currentBar);
-    
-    // console.log(`⏭️ Seeked to ${targetTime.toFixed(2)}s (bar ${currentBar})`);
+
+    // console.log(`⏭️ Updated visual sync to ${targetTime.toFixed(2)}s (bar ${currentBar})`);
   }
 
   resetNoteState() {
     this.remainingNotes = [...this.notes];
     this.activeNotes = [];
     this.currentVisibleBar = -1;
+  }
+
+  getBarStartTime(barNumber) {
+    // Use direct array access for O(1) lookup
+    return this.barCache[barNumber]?.startTime || 0;
+  }
+
+  snapToBarStart() {
+    const visualTime = this.getVisualTime();
+    const currentBar = this.getCurrentBar(visualTime);
+    const barStartTime = this.getBarStartTime(currentBar);
+
+    // Account for visual lead time when setting audio position
+    return barStartTime - this.visualLeadTime;
   }
 
   // =============================================================================
@@ -404,12 +435,12 @@ export class Synchronisator {
       console.warn('⚠️  Trying to highlight note with no elements:', note.hrefs);
       return;
     }
-    
+
     // Use mapped color index instead of raw channel
     const colorIndex = this.channelColorMap.get(note.channel) ?? note.channel;
-    
+
     // console.log(`🌟 Highlighting note: ${note.hrefs.join(', ')} (channel ${note.channel} → color ${colorIndex}, ${note.elements.length} elements)`);
-    
+
     note.elements.forEach(element => {
       element.classList.add('active');
       // Note: channel class was already added during initialization
@@ -420,7 +451,7 @@ export class Synchronisator {
   unhighlightNote(note) {
     const colorIndex = this.channelColorMap.get(note.channel) ?? note.channel;
     // console.log(`💫 Unhighlighting note: ${note.hrefs.join(', ')} (channel ${note.channel} → color ${colorIndex})`);
-    
+
     note.elements.forEach(element => {
       element.classList.remove('active');
       // Keep channel class for consistent coloring
@@ -442,30 +473,33 @@ export class Synchronisator {
   showBar(barNumber) {
     if (barNumber === this.currentVisibleBar) return;
 
-    this.hideAllBars();
-    
-    const barElements = this.barElementsCache.get(barNumber);
-    if (barElements) {
-      barElements.forEach(element => {
+    this.barCache.forEach(barData => {
+      if (barData) {
+        barData.elements.forEach(element => {
+          element.style.visibility = 'hidden';
+        });
+      }
+    });
+    this.currentVisibleBar = -1;
+
+    if (barNumber === -1) return;
+
+    const barData = this.barCache[barNumber];
+    if (barData) {
+      barData.elements.forEach(element => {
         element.style.visibility = 'visible';
       });
     }
-    
+
     this.currentVisibleBar = barNumber;
-    
-    // Call callback if provided
-    if (this.onBarChange && typeof this.onBarChange === 'function') {
+
+    // Call the bar change callback if it exists
+    if (this.onBarChange) {
       this.onBarChange(barNumber);
     }
   }
 
   hideAllBars() {
-    this.barElementsCache.forEach(elements => {
-      elements.forEach(element => {
-        element.style.visibility = 'hidden';
-      });
-    });
-    this.currentVisibleBar = -1;
   }
 
   // =============================================================================
@@ -480,7 +514,7 @@ export class Synchronisator {
       currentBar: this.currentVisibleBar,
       isPlaying: this.isPlaying,
       notesWithElements: this.notes.filter(n => n.elements.length > 0).length,
-      cachedBars: this.barElementsCache.size,
+      cachedBars: this.barCache.length,
       cachedNoteRefs: this.noteElementsCache.size,
       channelMapping: Object.fromEntries(this.channelColorMap)
     };
@@ -499,18 +533,18 @@ export class Synchronisator {
     console.log('📊 Stats:', this.getStats());
     console.log('🎵 Sample notes:', this.notes.slice(0, 3));
     console.log('📋 Available data-refs:', Array.from(this.noteElementsCache.keys()).slice(0, 10));
-    console.log('🎼 Cached bars:', Array.from(this.barElementsCache.keys()).sort((a,b) => a-b));
+    console.log('🎼 Cached bars:', this.barCache.map((bar, index) => bar ? index : null).filter(Boolean));
     console.log('🎨 Channel mapping:', Object.fromEntries(this.channelColorMap));
-    
+
     // Check CSS
     const activeElements = this.svg.querySelectorAll('.active');
     console.log(`🎨 Currently highlighted elements: ${activeElements.length}`);
-    
+
     if (this.isPlaying) {
       console.log('⏯️  Currently playing at:', this.getVisualTime().toFixed(2), 's');
       console.log('🎯 Current bar:', this.getCurrentBar(this.getVisualTime()));
     }
-    
+
     return this.getStats();
   }
 
@@ -529,13 +563,124 @@ export class Synchronisator {
   }
 
   // =============================================================================
-  // EVENT LISTENERS HELPER
+  // AUDIO EVENT HANDLERS
   // =============================================================================
 
-  attachAudioEvents() {
-    this.audio.addEventListener('play', () => this.start());
-    this.audio.addEventListener('pause', () => this.stop());
-    this.audio.addEventListener('ended', () => this.stop());
-    this.audio.addEventListener('seeked', () => this.seek(this.audio.currentTime));
+  initializeAudioEventHandlers(callbacks = {}) {
+    // Store callbacks for UI updates
+    this.callbacks = {
+      onPlayStateChange: callbacks.onPlayStateChange || (() => { }),
+      onBarChange: callbacks.onBarChange || (() => { }),
+      onSeekStart: callbacks.onSeekStart || (() => { }),
+      onSeekEnd: callbacks.onSeekEnd || (() => { })
+    };
+
+    // Set up bar change callback
+    this.onBarChange = (barNumber) => {
+      this.callbacks.onBarChange(barNumber);
+    };
+
+    // Only initialize event listeners once per audio element
+    if (!this.audio._bwvEventListenersInitialized) {
+      // Audio play event
+      this.audio.addEventListener("play", this._handlePlay = () => {
+        this.callbacks.onPlayStateChange(true);
+        this.start();
+      });
+
+      // Audio pause event
+      this.audio.addEventListener("pause", this._handlePause = () => {
+        this.callbacks.onPlayStateChange(false);
+        this.stop();
+      });
+
+      // Audio ended event
+      this.audio.addEventListener("ended", this._handleEnded = () => {
+        this.callbacks.onPlayStateChange(false);
+        this.stop();
+        this.audio.currentTime = 0;
+      });
+
+      // Seeking handlers - handle bar snapping and visual sync
+      this.initializeSeekingHandlers();
+
+      // Mark as initialized to prevent duplicate listeners
+      this.audio._bwvEventListenersInitialized = true;
+    }
   }
+
+  // Clean up event listeners (called when Synchronisator is destroyed)
+  cleanup() {
+    if (this.audio._bwvEventListenersInitialized) {
+      this.audio.removeEventListener("play", this._handlePlay);
+      this.audio.removeEventListener("pause", this._handlePause);
+      this.audio.removeEventListener("ended", this._handleEnded);
+
+      // Clean up seeking handlers
+      if (this._handleSeeking) {
+        this.audio.removeEventListener("seeking", this._handleSeeking);
+      }
+      if (this._handleSeeked) {
+        this.audio.removeEventListener("seeked", this._handleSeeked);
+      }
+
+      this.audio._bwvEventListenersInitialized = false;
+    }
+  }
+
+  initializeSeekingHandlers() {
+    let userIsSeeking = false;
+    let programmaticSeek = false;
+
+    // Simple debounced bar snapping
+    const debouncedBarSnap = debounce(() => {
+      if (programmaticSeek || !userIsSeeking) {
+        return;
+      }
+
+      // Clear user seeking state FIRST to prevent re-entry
+      userIsSeeking = false;
+      this.callbacks.onSeekEnd();
+
+      const currentAudioTime = this.audio.currentTime;
+      const barStartTime = this.snapToBarStart();
+
+      // Only snap if there's a meaningful difference
+      if (Math.abs(currentAudioTime - barStartTime) > 0.1) {
+        programmaticSeek = true;
+        this.audio.currentTime = barStartTime;
+
+        // Force visual sync update after snapping
+        setTimeout(() => {
+          this.updateVisualSync(barStartTime);
+        }, 50); // Small delay to ensure audio time has been set
+      }
+    }, 500); // Longer delay to ensure user has finished
+
+    // Track when user starts seeking
+    this.audio.addEventListener('seeking', this._handleSeeking = () => {
+      if (!programmaticSeek) {
+        this.callbacks.onSeekStart();
+        userIsSeeking = true;
+      }
+      // Skip visual sync during initialization (no bars cached yet)
+      if (this.barCache.length > 0) {
+        const visualTime = this.getVisualTime();
+        this.updateVisualSync(visualTime);
+      }
+    });
+
+    // Track when seek operation completes
+    this.audio.addEventListener("seeked", this._handleSeeked = () => {
+      if (programmaticSeek) {
+        programmaticSeek = false;
+        return;
+      }
+
+      // Trigger debounced bar snapping
+      debouncedBarSnap();
+    });
+  }
+
+
 }
