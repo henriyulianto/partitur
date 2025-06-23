@@ -7,11 +7,14 @@
    ============================================================================= */
 
 :root {
-  --header-height: 72px;
+  --header-height: 32px;
   --footer-height: 32px;
 
   /* HY Colors */
   --hy-lightblue: #cfdeee;
+  --hy-lightblue-50: #eff7ff;
+  --hy-lightblue-border: #bbc9d7;
+  --hy-lightblue-border-50: #e2e7eb;
 
   /* 🎼 Bach Color Palette - Easy to modify! */
   --bach-cream: #faf8f3;
@@ -82,6 +85,11 @@ body {
 
 .main-content {
   flex: 1;
+}
+
+#header-wrapper {
+  background-color: rgb(255 255 255 / 25%) !important;
+  backdrop-filter: blur(2px);
 }
 
 /* =============================================================================
@@ -373,9 +381,9 @@ footer#footer {
   min-height: var(--footer-height) !important;
   max-height: var(--footer-height) !important;
   */
-  background-color: var(--bach-cream) !important;
-  border-top-color: var(--bach-taupe-50) !important;
-  color: var(--bach-dark);
+  background-color: var(--hy-lightblue-50) !important;
+  border-top-color: var(--hy-lightblue-border) !important;
+  color: darkslategray;
 }
 
 #footer.d-flex.justify-content-between>div:nth-child(2) {

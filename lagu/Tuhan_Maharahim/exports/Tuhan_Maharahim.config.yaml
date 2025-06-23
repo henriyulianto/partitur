@@ -1,7 +1,10 @@
 workInfo:
   title: "Tuhan Maharahim"
-  fullTitle: "Tuhan Maharahim (SATB)"
+  fullTitle: "Tuhan Maharahim"
   composer: "Julia Ward Howe"
+  instrument: "SATB"
+  notationType: "solmisasi" # solmisasi | standard
+  workType: "arr" # arr | retype
   workId: "Tuhan_Maharahim"
   movementName: "SATB"
   externalURL: ""
