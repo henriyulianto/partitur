@@ -1,10 +1,11 @@
 workInfo:
   title: "Puji dan Syukur"
-  fullTitle: "Puji dan Syukur"
+  fullTitle: "Puji dan Syukur - Himne PNUKI 1984"
   composer: "Binsar Sitompul"
+  arranger: "Frans Haryadi"
   instrument: "SATB"
   notationType: "solmisasi" # solmisasi | standard
-  workType: "retype" # arr | retype
+  workType: "Salinan" # Komposisi | Aransemen | Salinan
   workId: "Puji_dan_Syukur"
   movementName: "SATB"
   externalURL: ""

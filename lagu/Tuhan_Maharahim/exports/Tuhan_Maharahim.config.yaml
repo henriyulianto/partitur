@@ -2,9 +2,10 @@ workInfo:
   title: "Tuhan Maharahim"
   fullTitle: "Tuhan Maharahim"
   composer: "Julia Ward Howe"
+  arranger: "Henri Yulianto"
   instrument: "SATB"
   notationType: "solmisasi" # solmisasi | standard
-  workType: "arr" # arr | retype
+  workType: "Aransemen" # Komposisi | Aransemen | Salinan
   workId: "Tuhan_Maharahim"
   movementName: "SATB"
   externalURL: ""

@@ -425,3 +425,8 @@ footer#footer {
   background-image: none;
   cursor: default;
 }
+
+/* Audio player */
+#audio {
+  border-radius: 15px;
+}

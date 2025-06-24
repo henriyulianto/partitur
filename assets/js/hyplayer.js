@@ -4,7 +4,7 @@ import { Synchronisator } from './synchronisator.mjs';
 import { createChannelColorMapping, logChannelMapping } from './channel2colour.js';
 
 // Import BWV navigation menu system  
-import { initializeBWVNavigation, adjustBWVButtonLayout } from './menu.js';
+// import { initializeBWVNavigation, adjustBWVButtonLayout } from './menu.js';
 // Import debounce utility
 import debounce from './lodash.build.mjs';
 
@@ -219,20 +219,21 @@ async function loadConfiguration(workId = null) {
     // workTitleContainer.innerHTML = '';
     // workTitleContainer.appendChild(workTitleElement);
     // End work title display 
+
+    const configResponse = await fetch(`${ROOT_LAGU}/${targetWorkId}/exports/${targetWorkId}.config.yaml`);
+
+    const yamlText = await configResponse.text();
+    CONFIG = jsyaml.load(yamlText);
+    const targetWorkTitle = `${CONFIG.workInfo.title} (${CONFIG.workInfo.instrument})`;
     
     const element = document.getElementById('loading-werk');
     if (element) {
-      element.innerHTML = targetWorkId;
+      element.innerHTML = `Loading ${targetWorkTitle}...`;
     }
-    
-    const configResponse = await fetch(`${ROOT_LAGU}/${targetWorkId}/exports/${targetWorkId}.config.yaml`);
 
     if (!configResponse.ok) {
       throw new Error(`Failed to load configuration for ${targetWorkId}`);
     }
-
-    const yamlText = await configResponse.text();
-    CONFIG = jsyaml.load(yamlText);
 
     // Update file paths for new unified format
     const basePath = `${ROOT_LAGU}/${targetWorkId}/exports/`;
@@ -264,8 +265,8 @@ function applyConfiguration() {
   // Make CONFIG globally available for menu system
   window.CONFIG = CONFIG;
 
-  document.title = CONFIG.workInfo.title;
-  document.getElementById('page-title').textContent = CONFIG.workInfo.title;
+  document.title = `${CONFIG.workInfo.title}`;
+  document.getElementById('page-title').textContent = `${CONFIG.workInfo.title} (${CONFIG.workInfo.instrument}) | ${CONFIG.workInfo.workType}`;
   document.getElementById('total_bars').textContent = CONFIG.musicalStructure.totalMeasures;
 
   const audioSource = document.getElementById('audio-source');
@@ -569,7 +570,7 @@ function positionButtons() {
 
 const debouncedPositionButtons = debounce(positionButtons, 50);
 const debouncedCheckScroll = debounce(checkScrollButtonVisibility, 50);
-const debouncedAdjustBWV = debounce(adjustBWVButtonLayout, 50);
+// const debouncedAdjustBWV = debounce(adjustBWVButtonLayout, 50);
 
 // =============================================================================
 // MOBILE DETECTION AND TIMING ADJUSTMENT
@@ -622,35 +623,35 @@ async function setup() {
     window.highlighter = new MusicalHighlighter();
     
     // Initialize BWV navigation menu system FIRST
-    console.log('🚀 Starting BWV navigation initialization...');
-    await initializeBWVNavigation();
-    console.log('✅ BWV navigation initialization complete');
+    // console.log('🚀 Starting BWV navigation initialization...');
+    // await initializeBWVNavigation();
+    // console.log('✅ BWV navigation initialization complete');
 
     // Load initial work content
     const initialWorkId = processWerkParameter();
     await loadWorkContent(initialWorkId, true); // true = isInitialLoad
 
     // Ensure navigation state is synchronized
-    if (typeof window.getBWVNavigation === 'function') {
-      const nav = window.getBWVNavigation();
-      if (nav) {
-        nav.updateCurrentWork(initialWorkId);
-        nav.updateActiveState();
-      }
-    }
+    // if (typeof window.getBWVNavigation === 'function') {
+    //   const nav = window.getBWVNavigation();
+    //   if (nav) {
+    //     nav.updateCurrentWork(initialWorkId);
+    //     nav.updateActiveState();
+    //   }
+    // }
 
     // Initialize event handlers (only once)
     initEventHandlers();
 
-    console.log('🎵 BWV Player fully loaded and ready!');
+    console.log('🎵 HY Player fully loaded and ready!');
 
     // Show the interface
     checkScrollButtonVisibility();
 
     // Adjust BWV button layout after everything is loaded
-    setTimeout(() => {
-      adjustBWVButtonLayout();
-    }, 100);
+    // setTimeout(() => {
+    //   adjustBWVButtonLayout();
+    // }, 100);
 
     isInitialized = true;
 
@@ -682,7 +683,7 @@ function initEventHandlers() {
   // Window event handlers
   window.addEventListener('resize', () => {
     debouncedPositionButtons();
-    debouncedAdjustBWV();
+    // debouncedAdjustBWV();
   });
 
   window.addEventListener('scroll', debouncedCheckScroll);
