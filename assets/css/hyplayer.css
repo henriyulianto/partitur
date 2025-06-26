@@ -7,11 +7,14 @@
    ============================================================================= */
 
 :root {
-  --header-height: 72px;
+  --header-height: 32px;
   --footer-height: 32px;
 
   /* HY Colors */
   --hy-lightblue: #cfdeee;
+  --hy-lightblue-50: #eff7ff;
+  --hy-lightblue-border: #bbc9d7;
+  --hy-lightblue-border-50: #e2e7eb;
 
   /* 🎼 Bach Color Palette - Easy to modify! */
   --bach-cream: #faf8f3;
@@ -82,6 +85,11 @@ body {
 
 .main-content {
   flex: 1;
+}
+
+#header-wrapper {
+  background-color: rgb(255 255 255 / 25%) !important;
+  backdrop-filter: blur(2px);
 }
 
 /* =============================================================================
@@ -173,17 +181,10 @@ body {
   }
 
   #svg-container>svg a.notangka {
-    /* Firefox */
-    -moz-transition: fill 1.5s ease, filter 1.5s ease, transform 1.5s ease,
-      stroke 1.5s ease, stroke-width 1.5s ease, stroke-opacity 1.5s ease;
-    -moz-transform: scale(1);
-    -moz-transform-origin: center;
-    -moz-transform-box: fill-box;
-    /*---------*/
     transition: fill 1.5s ease, filter 1.5s ease, transform 1.5s ease,
       stroke 1.5s ease, stroke-width 1.5s ease, stroke-opacity 1.5s ease;
     transform: scale(1);
-    transform-box: fill-box;
+    transform-box: border-box;
     transform-origin: center;
     stroke-width: 0;
     stroke-opacity: 0;
@@ -191,20 +192,11 @@ body {
   }
 
   #svg-container>svg a.notangka.active {
-    /* Firefox */
-    -moz-transition: fill 0.15s linear, filter 0.15s linear, transform 0.15s linear,
-      stroke 0.15s linear, stroke-width 0.15s linear,
-      stroke-opacity 0.15s linear;
-    -moz-transform: scale(1.25);
-    -moz-transform-box: fill-box;
-    -moz-transform-origin: center;
-    -moz-animation: none;
-    /*---------*/
     transition: fill 0.15s linear, filter 0.15s linear, transform 0.15s linear,
       stroke 0.15s linear, stroke-width 0.15s linear,
       stroke-opacity 0.15s linear;
-    transform: scale(1.25);
-    transform-box: fill-box;
+    transform: scale(1.3);
+    transform-box: border-box;
     transform-origin: center;
     stroke-width: 0.125;
     stroke-opacity: 0.667;
@@ -389,9 +381,9 @@ footer#footer {
   min-height: var(--footer-height) !important;
   max-height: var(--footer-height) !important;
   */
-  background-color: var(--bach-cream) !important;
-  border-top-color: var(--bach-taupe-50) !important;
-  color: var(--bach-dark);
+  background-color: var(--hy-lightblue-50) !important;
+  border-top-color: var(--hy-lightblue-border) !important;
+  color: darkslategray;
 }
 
 #footer.d-flex.justify-content-between>div:nth-child(2) {
@@ -432,4 +424,9 @@ footer#footer {
   -moz-appearance: none;
   background-image: none;
   cursor: default;
+}
+
+/* Audio player */
+#audio {
+  border-radius: 15px;
 }
