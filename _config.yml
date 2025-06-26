@@ -8,11 +8,11 @@ theme: just-the-docs
 # Set a path/url to a favicon that will be displayed by the browser
 favicon_ico: "/assets/images/favicon.ico"
 
-# url: https://henriyulianto.github.io
-# baseurl: /partitur
-# source: /
-# destination: _site
-# repository: henriyulianto/partitur
+url: https://henriyulianto.github.io
+baseurl: /partitur
+source: /
+destination: _site
+repository: henriyulianto/partitur
 
 # Aux links for the upper right navigation
 aux_links:
