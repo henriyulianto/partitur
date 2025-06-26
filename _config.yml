@@ -9,11 +9,11 @@ theme: just-the-docs
 favicon_ico: "/partitur/assets/images/favicon.ico"
 
 #url: https://henriyulianto.github.io/partitur
-baseurl: /
+baseurl: /partitur
 source: docs
 destination: docs/_site
 repository: henriyulianto/partitur
-# remote_theme: pmarsceill/just-the-docs
+remote_theme: pmarsceill/just-the-docs
 
 # Aux links for the upper right navigation
 aux_links:
