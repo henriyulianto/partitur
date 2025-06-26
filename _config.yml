@@ -8,10 +8,10 @@ theme: just-the-docs
 # Set a path/url to a favicon that will be displayed by the browser
 favicon_ico: "/partitur/assets/images/favicon.ico"
 
-#url: https://henriyulianto.github.io/partitur
+url: https://henriyulianto.github.io/partitur
 baseurl: /partitur
-source: docs
-destination: docs/_site
+source: .
+destination: _site
 repository: henriyulianto/partitur
 remote_theme: pmarsceill/just-the-docs
 
