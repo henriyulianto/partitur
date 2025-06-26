@@ -10,9 +10,10 @@ favicon_ico: "/assets/images/favicon.ico"
 
 url: https://henriyulianto.github.io
 baseurl: /partitur
-source: /
-destination: _site
+source: /docs
+destination: docs/_site
 repository: henriyulianto/partitur
+remote_theme: pmarsceill/just-the-docs
 
 # Aux links for the upper right navigation
 aux_links:
