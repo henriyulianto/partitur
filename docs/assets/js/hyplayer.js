@@ -198,7 +198,7 @@ function updateMeasureControlsVisibility() {
 // =============================================================================
 
 let CONFIG = null;
-let ROOT_LAGU = "./lagu"
+let ROOT_LAGU = "/partitur/lagu"
 
 async function loadConfiguration(workId = null) {
   try {

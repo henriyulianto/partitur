@@ -2,6 +2,7 @@
 title: Beranda
 layout: minimal
 has_children: true
+permalink: /
 ---
 
 # Repositori Partitur Not Angka
