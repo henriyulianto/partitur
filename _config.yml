@@ -6,14 +6,14 @@ theme: just-the-docs
 # logo: "/assets/images/hy-site-logo.png"
 
 # Set a path/url to a favicon that will be displayed by the browser
-favicon_ico: "/assets/images/favicon.ico"
+favicon_ico: "/partitur/assets/images/favicon.ico"
 
 url: https://henriyulianto.github.io
 baseurl: /partitur
 source: docs
 destination: docs/_site
 repository: henriyulianto/partitur
-remote_theme: pmarsceill/just-the-docs
+# remote_theme: pmarsceill/just-the-docs
 
 # Aux links for the upper right navigation
 aux_links:
