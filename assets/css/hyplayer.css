@@ -69,28 +69,23 @@
    LAYOUT & STRUCTURE
    ============================================================================= */
 
-html,
+/* html,
 body {
   height: 100%;
-}
+} */
 
-body {
+/* body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: white;
-  padding-top: var(--header-height);
+  background-color: white; */
+  /* padding-top: var(--header-height); */ */
   /* Compensate for fixed header */
-}
+/* } */
 
-.main-content {
+/* .main-content {
   flex: 1;
-}
-
-#header-wrapper {
-  background-color: rgb(255 255 255 / 25%) !important;
-  backdrop-filter: blur(2px);
-}
+} */
 
 /* =============================================================================
    SVG CONTAINER & NOTE ANIMATIONS

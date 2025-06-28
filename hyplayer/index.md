@@ -1,22 +1,6 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-  <meta name="theme-color" content="#8B4513">
-  <meta name="description" content="Koleksi Partitur Not Angka - Henri Yulianto">
-
-  <title id="page-title">HY Player</title>
-  <link rel="stylesheet" href="/partitur/assets/css/normalize.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/partitur/assets/css/hyplayer.css">
-  <link rel="stylesheet" href="/partitur/assets/css/menu.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
-</head>
-
-<body>
+---
+layout: hyplayer
+---
 
   <!-- Fixed header with BWV navigation and audio controls -->
   <div id="header-wrapper" class="fixed-top bg-light">
@@ -86,61 +70,8 @@
     style="bottom: 40px; right: 0; visibility: hidden; width: 28px; height: 28px; border: 1px solid var(--bach-taupe-50); z-index: 1040; background-color: var(--bach-cream);"
     title="scroll_to_top"
     onclick="document.getElementById('svg-container').scrollIntoView({ behavior: 'smooth', block: 'start'}); return false;">
-    <img src="/partitur/assets/images/up-arrow-svgrepo-com.svg" width="16" height="16" alt="scroll_up"
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/up-arrow-svgrepo-com.svg" width="16" height="16" alt="scroll_up"
       style="filter: brightness(0) saturate(100%) invert(50%) sepia(5%) saturate(388%) hue-rotate(314deg) brightness(89%) contrast(87%);">
   </a>
 
-  <!DOCTYPE html>
-  <html lang="id">
-
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Footer</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  </head>
-
-  <body>
-    <div style="height: 80vh;"></div>
-
-    <footer id="footer" class="position-sticky bottom-0 start-50 font-monospace d-flex justify-content-between align-items-center border-top"
-      style="font-size: 12px;">
-      <div class="mx-2">
-        <!-- <a href="/bach-siegel.html" title="Bach Seal">
-          <svg width="24" height="24" viewBox="0 0 200 200">
-            <use x="0" y="0" width="200" height="200" href="/bwv-siegel/exports/bwv-siegel.svg#bach_siel_full_right-symbol" />
-            <use x="0" y="0" width="200" height="200" href="/bwv-siegel/exports/bwv-siegel.svg#bach_siel_full_left-symbol" />
-          </svg>
-        </a> -->
-      </div>
-      <div class="mx-2 text-muted d-none d-md-flex align-items-center gap-1">
-        <span class="fs-5">©</span>
-        <span>2025</span>
-        <span>Henri Yulianto</span>
-        <a href="https://github.com/henriyulianto" target="_blank" rel="noopener noreferrer" class="text-muted"
-          title="GitHub">
-          <img src="/partitur/assets/images/github-mark.svg" width="18" height="18" alt="GitHub" style="margin-top: -2px;">
-        </a>
-      </div>
-      <div class="mx-2 text-muted d-flex align-items-center gap-1">
-        <span>
-          <img src="/partitur/assets/images/LilyPond.svg" width="18" height="18" alt="Bach Seal">
-          <a href="https://lilypond.org/" target="_blank" rel="noopener noreferrer" class="text-muted">LilyPond</a>
-        </span>
-        <span class="vr"></span>
-        <!-- <span>
-          <img src="media/Claude_AI_logo.svg" width="18" height="18" alt="Bach Seal">
-          <a href="https://claude.ai/" target="_blank" rel="noopener noreferrer" class="text-muted">Claude.ai</a>
-        </span> -->
-      </div>
-    </footer>
-
-  </body>
-
-  </html>
-
-  <script type="module" src="/partitur/assets/js/hyplayer.js"></script>
-
-</body>
-
-</html>
+  <script type="module" src="{{ site.url }}{{ site.baseurl }}/assets/js/hyplayer.js"></script>

@@ -6,7 +6,7 @@ theme: just-the-docs
 # logo: "/assets/images/hy-site-logo.png"
 
 # Set a path/url to a favicon that will be displayed by the browser
-favicon_ico: "/partitur/assets/images/favicon.ico"
+# favicon_ico: "assets/images/favicon.ico"
 
 url: https://henriyulianto.github.io/partitur
 baseurl: /partitur
@@ -14,11 +14,50 @@ source: .
 destination: _site
 repository: henriyulianto/partitur
 remote_theme: pmarsceill/just-the-docs
+lang: "id-ID"
+
+permalink: pretty
+
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in the project
+      type: "pages"
+    values:
+      layout: "minimal"
+
+exclude:
+  # from https://github.com/jekyll/jekyll/blob/master/lib/site_template/_config.yml:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  # specific to the theme website:
+  - bin/
+  - lib/
+  - "*.gemspec"
+  - "*.gem"
+  - LICENSE.txt
+  - package.json
+  - package-lock.json
+  - Rakefile
+  - README.md
+  - CODE_OF_CONDUCT.md
+  - docker-compose.yml
+  - Dockerfile
+  # theme test code
+  - fixtures/
 
 # Aux links for the upper right navigation
 aux_links:
   solmisasi-lily: https://henriyulianto.github.iu/solmisasi-lily
-  lagumisa.web.id: https://www.lagumisa.web.id
+  Lagu Misa: https://www.lagumisa.web.id
+  Madah Liturgi: https://madahliturgi.wordpress.com
 aux_links_new_tab: true
 
 plugins:
@@ -34,7 +73,7 @@ compress_html:
 
 # Enable or disable the site search
 # Supports true (default) or false
-search_enabled: true
+search_enabled: false
 
 search:
   # Split pages into sections that can be searched individually
@@ -83,7 +122,27 @@ last_edit_timestamp: true # show or hide edit time - page must have `last_modifi
 last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
 
 # Color scheme supports "light" (default) and "dark"
-color_scheme: light
+color_scheme: wider
+
+# callouts_level: quiet # or loud
+callouts:
+  highlight:
+    color: yellow
+  important:
+    title: Penting
+    color: blue
+  new:
+    title: Terbaru
+    color: green
+  note:
+    title: Catatan
+    color: purple
+  warning:
+    title: Peringatan
+    color: red
+  error:
+    title: Kesalahan
+    color: red
 
 # Enable back to top link at footer
 back_to_top: true

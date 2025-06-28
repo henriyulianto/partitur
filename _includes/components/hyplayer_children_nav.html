@@ -1,0 +1,129 @@
+{%- comment -%}
+  Include as: {%- include components/children_nav.html -%}
+  Depends on: page, site, nav_breadcrumbs.
+  Results in: HTML for the children-navigation component.
+  Includes: components/nav/sorted.html, toc_heading_custom.html.
+  Overwrites:
+    nav_ancestor_links, nav_top_node_titles, nav_child_candidates, nav_children,
+    nav_child, nav_child_ok, nav_child_ancestor, nav_sorted.
+{%- endcomment -%}
+
+{%- comment -%}
+  Whether a page has any children is checked efficiently by inspecting the cached
+  site_nav. If the page has no children, nav_children is set to an empty array;
+  otherwise nav_children is left unset. (The site_nav is rendered the first time
+  it is included, and that may overwrite various variables.)
+{%- endcomment -%}
+
+{%- if page.has_children == false -%}
+  {%- assign nav_children = "" | split: "" -%}
+{%- else -%}
+
+  {%- capture site_nav -%}
+  {%- include_cached components/site_nav.html all=true -%}
+  {%- endcapture -%}
+
+  {%- assign nav_children = nil -%}
+
+  {%- capture nav_list_link -%}
+  <a href="{{ page.url | relative_url }}" class="nav-list-link">
+  {%- endcapture -%}
+
+  {%- capture nav_list_simple -%}
+  <ul class="nav-list">
+  {%- endcapture -%}
+
+  {%- assign nav_child_start = site_nav
+        | split: nav_list_link | last
+        | split: "</a>" | slice: 1 | first -%}
+
+  {%- assign nav_child_test = nav_child_start 
+        | remove_first: nav_list_simple | prepend: nav_list_simple -%}
+    
+  {%- if nav_child_start != nav_child_test -%}
+    {%- assign nav_children = "" | split: "" -%}
+  {%- endif -%}
+
+{%- endif -%}
+
+{%- unless nav_children -%}
+
+  {%- comment -%}
+    The layout is assumed to include components/breadcrumbs.html before this file,
+    otherwise it needs to be included here.
+  {%- endcomment -%}
+
+  {%- assign nav_ancestors = "" | split: "" -%}
+  {%- for nav_link in nav_breadcrumbs -%}
+    {%- assign nav_title = nav_link | split: ">" | slice: 1 | first | append: ">" | remove: "</a>" -%}
+    {%- assign nav_ancestors = nav_ancestors | push: nav_title -%}
+  {%- endfor -%}
+
+  {%- assign nav_parenthood = site[page.collection] | default: site.html_pages
+    | where_exp: "item", "item.title != nil" | group_by: "parent" -%}
+
+  {%- assign nav_top_nodes = nav_parenthood
+      | where_exp: "item", "item.name == ''" | map: "items" | first -%}
+
+  {% assign nav_top_node_titles = nav_top_nodes | map: "title" -%}
+
+  {%- include components/nav/children.html node=page ancestors=nav_ancestors all=true -%}
+
+{%- endunless -%}
+
+{%- if nav_children.size >= 1 -%}
+
+  {%- if page.child_nav_order == 'desc' or page.child_nav_order == 'reversed' -%}
+    {%- assign nav_children = nav_children | reverse -%}
+  {%- endif -%}
+
+<hr>
+{% include hyplayer_toc_heading_custom.html %}
+<ol>
+  {% for nav_child in nav_children %}
+  <li>
+    <a href="{{ nav_child.url | relative_url }}" style="font-weight: bold;" class="fs-5">{{ nav_child.title }}</a>
+    {%- if nav_child.work_type -%}
+      {% if nav_child.work_type == 'Salinan' %}
+        {%- assign label_class = 'label label-yellow' -%}
+      {% elsif nav_child.work_type == 'Aransemen' %}
+        {%- assign label_class = 'label label-green' -%}
+      {% elsif nav_child.work_type == 'Komposisi' %}
+        {%- assign label_class = 'label label-purple' -%}
+      {% endif %}
+      <span class="{{ label_class }}">{{ nav_child.work_type }}</span>
+    {%- endif -%}<br>
+    <blockquote style="line-height: 1.3 !important;">
+      {%- if nav_child.composer_and_arranger_and_lyricist -%}
+        <span class="fs-3">Lagu, syair, dan aransemen: {{ nav_child.composer_and_arranger_and_lyricist }}</span>
+      {%- elsif nav_child.composer_and_arranger -%}
+        <span class="fs-3">Lagu dan aransemen: {{ nav_child.composer_and_arranger }}</span>
+      {%- elsif nav_child.composer_and_lyricist -%}
+        <span class="fs-3">Lagu dan syair: {{ nav_child.composer_and_lyricist }}</span>
+      {%- else -%}
+        <span class="fs-3">Lagu: {{ nav_child.composer }}</span>
+      {%- endif -%}
+      {%- if nav_child.lyricist -%}
+        &nbsp;|&nbsp;<span class="fs-3">Syair: {{ nav_child.lyricist }}</span>
+      {%- endif -%} 
+      {%- if nav_child.arranger_and_lyricist -%}
+        &nbsp;|&nbsp;<span class="fs-3">Syair dan aransemen: {{ nav_child.arranger_and_lyricist }}</span>
+      {%- else -%}
+        &nbsp;|&nbsp;<span class="fs-3">Aransemen: {{ nav_child.arranger }}</span>
+      {%- endif -%}
+      {%- if nav_child.additionalInfo -%}
+        <br><span class="fs-3">{{ nav_child.additionalInfo }}</span>
+      {%- endif -%}
+      {%- if nav_child.pdf_path -%}
+        <br><a href="{{ site.url }}{{ site.baseurl }}/{{ nav_child.pdf_path }}" class="text-decoration-none fs-3 text-red-300">Unduh berkas PDF
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z"></path>
+          </svg>
+        </a>
+      {%- endif -%}
+    </blockquote>
+  </li>
+  {% endfor %}
+</ol>
+
+{%- endif -%}

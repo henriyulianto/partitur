@@ -15,8 +15,9 @@ import MusicalHighlighter, { quickHighlight, FuguePresets } from './musical-high
 // =============================================================================
 
 function processWerkParameter() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const werkParam = urlParams.get('lagu');
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const werkParam = urlParams.get('lagu');
+  const werkParam = window.moduleConfig.lagu;
   const defaultWorkId = 'test';
 
   if (!werkParam) {
@@ -198,7 +199,7 @@ function updateMeasureControlsVisibility() {
 // =============================================================================
 
 let CONFIG = null;
-let ROOT_LAGU = "/partitur/lagu"
+let ROOT_LAGU = "/partitur/lagu";
 
 async function loadConfiguration(workId = null) {
   try {

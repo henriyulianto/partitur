@@ -3,7 +3,9 @@ workInfo:
   fullTitle: "Tuhan Maharahim"
   composer: "Julia Ward Howe"
   arranger: "Henri Yulianto"
+  lyricist: "A. Hari Kustono, Pr. (saduran)"
   instrument: "SATB"
+  additionalInfo: "Judul asli: <i>Battle Hymn of the Republic</i>"
   notationType: "solmisasi" # solmisasi | standard
   workType: "Aransemen" # Komposisi | Aransemen | Salinan
   workId: "Tuhan_Maharahim"
