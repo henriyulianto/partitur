@@ -9,6 +9,7 @@
 :root {
   --header-height: 32px;
   --footer-height: 32px;
+  --content-width: 50rem;
 
   /* HY Colors */
   --hy-lightblue: #cfdeee;
@@ -78,14 +79,14 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: white; */
+  background-color: white; */ */
   /* padding-top: var(--header-height); */ */
   /* Compensate for fixed header */
 /* } */
 
-/* .main-content {
+.main-content {
   flex: 1;
-} */
+}
 
 /* =============================================================================
    SVG CONTAINER & NOTE ANIMATIONS
@@ -424,4 +425,5 @@ footer#footer {
 /* Audio player */
 #audio {
   border-radius: 15px;
+  color-scheme: light;
 }
