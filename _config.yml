@@ -1,4 +1,4 @@
-title: Repositori Partitur Not Angka - Henri Yulianto
+title: Repo Partitur
 description: Repositori Partitur Not Angka oleh Henri Yulianto
 theme: just-the-docs
 
@@ -120,7 +120,7 @@ last_edit_timestamp: true # show or hide edit time - page must have `last_modifi
 last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
 
 # Color scheme supports "light" (default) and "dark"
-color_scheme: light
+color_scheme: wider
 
 # callouts_level: quiet # or loud
 callouts:

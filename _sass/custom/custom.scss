@@ -1,7 +1,7 @@
 // custom SCSS (or CSS) goes here
 
 .main-header {
-  z-index: 10;
+  z-index: 1050;
   position: sticky !important;
   top: 0 !important;
   background-color: $body-background-color !important;
@@ -11,6 +11,10 @@
   background-color: rgb(255 255 255 / 25%) !important;
   backdrop-filter: blur(2px);
   top: $header-height !important;
+}
+
+.side-bar {
+  z-index: 1060;
 }
 
 // Breadcrumb nav

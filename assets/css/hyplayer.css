@@ -353,6 +353,15 @@ body.svg-at-top #button_scroll_to_top {
   transition: filter 1s ease, width 1s ease;
 }
 
+/* #pdf_download {
+  height: auto;
+  margin: auto;
+  color: var(--bach-dark) !important;
+  font-weight: normal;
+  font-size: 0.8rem;
+  transition: filter 1s ease, width 1s ease;
+} */
+
 body.seeking #bar_spy {
   filter: drop-shadow(0 0 0.2rem var(--bach-dark));
   transition: filter 0.1s ease, width 0.1s ease;
