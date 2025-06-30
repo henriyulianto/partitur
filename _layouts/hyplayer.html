@@ -20,7 +20,7 @@ nav_enabled: false
   {% endif %}
   <div class="main" id="top">
     {% include components/hyplayer_header.html %}
-    <div class="main-content-wrap">
+    <div class="main-content-wrap" style="padding: 0 !important; padding-top: 1rem !important; padding-bottom: 1rem !important;">
       <div id="main-content" class="main-content">
         <!-- Fixed header with BWV navigation and audio controls -->
         <div id="header-wrapper" class="fixed-top bg-light">
@@ -81,7 +81,7 @@ nav_enabled: false
         </div> <!-- End main-content wrapper -->
 
         <!-- Scroll-to-top button - positioned dynamically by JavaScript, auto-hides when not needed -->
-        <a id="button_scroll_to_top" type="button"
+        <!-- <a id="button_scroll_to_top" type="button"
           class="btn btn-outline-light btn-sm d-inline-flex align-items-center justify-content-center position-fixed"
           style="bottom: 40px; right: 0; visibility: hidden; width: 28px; height: 28px; border: 1px solid var(--bach-taupe-50); z-index: 1040; background-color: var(--bach-cream);"
           title="scroll_to_top"
@@ -89,7 +89,7 @@ nav_enabled: false
           <img src="../assets/images/up-arrow-svgrepo-com.svg" width="16" height="16"
             alt="scroll_up"
             style="filter: brightness(0) saturate(100%) invert(50%) sepia(5%) saturate(388%) hue-rotate(314deg) brightness(89%) contrast(87%);">
-        </a>
+        </a> -->
         <script>
           window.moduleConfig = { lagu: "{{ page.workId }}" }
         </script>
