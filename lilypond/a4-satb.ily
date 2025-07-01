@@ -140,8 +140,9 @@ watermark = \markup {
 
   % Ragged
   ragged-right       = ##f
-  ragged-last        = ##f
+  ragged-last        = ##t
   ragged-bottom      = ##t
+  ragged-last-bottom = ##t
 
   % Spacing
   system-system-spacing.basic-distance = #8
@@ -264,8 +265,8 @@ watermark = \markup {
              }
              \fill-line {
                %% Tagline header field only on last page in the book.
-               %\if \on-last-page-of-part
-               \if \on-first-page-of-part
+               \if \on-last-page-of-part
+               %\if \on-first-page-of-part
                \abs-fontsize #9.5 \fromproperty #'header:tagline
              }
            }
@@ -322,7 +323,7 @@ SATB_Solmisasi_Layout =
     \override Rest.font-family = #'serif
     %\override Rest.font-size = #0.25
     \override DynamicLineSpanner.outside-staff-priority = ##f
-    \override DynamicLineSpanner.Y-offset = #3.25
+    \override DynamicLineSpanner.Y-offset = #3.7
     \override Hairpin.thickness = #0.9
     \override Tie.thickness = #2.7
     \override Tie.line-thickness = #0.4
@@ -351,29 +352,42 @@ SATB_Solmisasi_Layout =
     \override LyricHyphen.layer = #-3
     \override LyricHyphen.minimum-distance = #0.4
   }
+  \context {
+    \ChordNames
+    chordRootNamer = #JazzChordNames	% update the chord names
+    chordNameExceptions = #JazzChords	% update the chord exceptions
+    %\override ChordName.fonts.sans = #"Norfolk PlainChords Sans Std"
+    \override ChordName.font-size = #-0.5
+    %\override ChordName.font-name = #"lilyjazz-chord"  % use the custom font for displaying the chords
+  }
 }
 
 SATB_Solmisasi = {
   <<
-    \new SolmisasiTimeAndKeySignature {
-      \solmisasiMusic {
-        \keepWithTag #'(solmisasi notangka)
-        #(if Global Global (empty-music))
-      }
+    %\new SolmisasiTimeAndKeySignature {
+    \solmisasiMusic {
+      \keepWithTag #'(solmisasi notangka)
+      #(if Global Global (empty-music))
     }
-    \make-one-solmisasi-voice-vocal-staff "Intro"
-    \make-one-solmisasi-voice-vocal-staff "Solo"
-    \new SolmisasiChoirStaff <<
-      \make-one-solmisasi-voice-vocal-staff "Descant"
-      %%
-      \make-one-solmisasi-voice-vocal-staff "Women"
-      %%
-      \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Soprano"
-      \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Alto"
-      \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Tenor"
-      \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Bass"
-      %%
-      \make-one-solmisasi-voice-vocal-staff "Men"
+    %}
+    <<
+      \new ChordNames {
+        #(if Chords Chords (empty-music))
+      }
+      \make-one-solmisasi-voice-vocal-staff "Solo"
+      \new SolmisasiChoirStaff <<
+        \make-one-solmisasi-voice-vocal-staff "Descant"
+        %%
+        \make-one-solmisasi-voice-vocal-staff "Women"
+        %%
+        \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Soprano"
+        \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Alto"
+        \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Tenor"
+        \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Bass"
+        %%
+        \make-one-solmisasi-voice-vocal-staff "Men"
+      >>
+      \make-one-solmisasi-voice-vocal-staff "Intro"
     >>
   >>
   \label #'lastPage
@@ -382,7 +396,6 @@ SATB_Solmisasi = {
 SATB_NotBalok = {
   <<
     #(if Global Global)
-	\make-one-voice-vocal-staff "Intro" "treble"
     \make-one-voice-vocal-staff "Solo" "treble"
     \new ChoirStaff <<
       \make-one-voice-vocal-staff "Descant" "treble"
@@ -404,6 +417,7 @@ SATB_NotBalok = {
            #} )
       \make-one-voice-vocal-staff "Men" "bass"
     >>
+    \make-one-voice-vocal-staff "Intro" "treble"
   >>
   \label #'lastPage
 }
@@ -418,7 +432,6 @@ SATB_Midi = {
              }
            }
          #})
-    \make-one-pseudo-solmisasi-voice-vocal-staff "Intro"
     \make-one-pseudo-solmisasi-voice-vocal-staff "Solo"
     \new ChoirStaff <<
       \make-one-pseudo-solmisasi-voice-vocal-staff "Descant"
@@ -432,6 +445,7 @@ SATB_Midi = {
       %%
       \make-one-pseudo-solmisasi-voice-vocal-staff "Men"
     >>
+    \make-one-pseudo-solmisasi-voice-vocal-staff "Intro"
   >>
 }
 
@@ -447,7 +461,9 @@ Bookpart_NotAngka = \bookpart {
   \conditional #EngraveNotAngka \score {
     \keepWithTag #'(solmisasi notangka)
     #(if have-music
-         #{ << \SATB_Solmisasi >> #}
+         (if is-svg?
+             #{ \unfoldRepeats << \SATB_Solmisasi >> #}
+             #{ << \SATB_Solmisasi >> #})
          #{ { } #} )
     \layout {
       \SATB_Solmisasi_Layout

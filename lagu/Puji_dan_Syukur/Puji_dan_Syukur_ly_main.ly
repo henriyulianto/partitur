@@ -7,7 +7,7 @@ EngraveNotBalok = ##f
 StandardStaffSize = #20
 SolmisasiStaffSize = #20
 TwoVoicesPerStaff = ##f
-CetakWatermark = ##f
+CetakWatermark = #(not is-svg?)
 AlwaysShortInstrumentName = ##t
 
 Global = {
@@ -76,11 +76,11 @@ IntroMusic = {
     \once \override Score.SystemStartBar.collapse-height = #10
   }
   \partial 4
-    f'4 |
-    g'4 g'4 bes'4 aes'4 |
-    g'4 f'4 ees'4 g'4 |
-    c''2 bes'2 |
-    bes'2. r4 \bar "||"
+  f'4 |
+  g'4 g'4 bes'4 aes'4 |
+  g'4 f'4 ees'4 g'4 |
+  c''2 bes'2 |
+  bes'2. r4 \bar "||"
   \break
 }
 IntroMidiInstrument = "acoustic grand"
