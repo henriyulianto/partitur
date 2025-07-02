@@ -36,27 +36,26 @@ Global = {
   }
   \tag#'notangka {
     %\omit Score.BarNumber
-    \tweak extra-offset #'(0 . -1) \mark \markup \smaller \smaller \musical-structure "Intro"
+    \tweak extra-offset #'(0 . -1) \mark \markup \smaller\caps\bold "Intro"
     s1
   }
   \once\omit Score.MetronomeMark
   \tempo 4=72
   s1*5 \break
-  \set Score.rehearsalMarkFormatter = #format-mark-box-alphabet
-  \tweak X-offset #-2.18 \tweak extra-offset #'(0 . 0.4) \mark\default
+  \tweak X-offset #-2.18 \mark\default
   s1*4 \break
   s1*4 \break
   s1*4 \break
   \once\override Score.SegnoMark.X-offset = #-4
-  \once\override Score.SegnoMark.Y-offset = #1.2
+  \once\override Score.SegnoMark.Y-offset = #1.7
   \once\override Score.SegnoMark.font-size = #3.5
   \repeat segno 2 {
     \set Score.rehearsalMark = #2
-    \tweak X-offset #-2.1 \tweak extra-offset #'(0 . -1.2) \mark\default
+    \tweak X-offset #-2.1 \tweak extra-offset #'(0 . -0.5) \mark\default
     s1*4 \break
     s1*4 \pageBreak
     s1*4 \break
-    \tweak X-offset #-2.18 \tweak extra-offset #'(0 . 1.1) \mark\default
+    \tweak X-offset #-2.18 \tweak extra-offset #'(0 . -1) \mark\default
     s1*4 \break
     s1*4
     #(if (not is-svg?)
@@ -71,7 +70,7 @@ Global = {
     \alternative {
       \volta 1 {
         \once\omit Score.CodaMark
-        \mark \markup \smaller \smaller \musical-structure "Interlude"
+        \mark \markup \smaller\caps\bold "Interlude"
         % \once \override Score.CodaMark.self-alignment-X = #RIGHT
         %         \once \override Score.CodaMark.extra-offset = #'(0.75 . -4)
         %         \once \set Score.codaMarkFormatter =

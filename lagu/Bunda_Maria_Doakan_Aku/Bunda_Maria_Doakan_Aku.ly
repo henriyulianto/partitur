@@ -18,7 +18,7 @@
   judul-header-I = "Bunda Maria Doakan Aku"
   judul-header-II = "Untuk PS Campur SATB"
   pencipta-lagu = \markup {
-    Lagu: \caps { Grego Julius }
+    Lagu dan Syair: \caps { Grego Julius }
   }
   penata-suara = \markup {
     Aransemen SATB: \caps { Chrisantyo Lucas }
