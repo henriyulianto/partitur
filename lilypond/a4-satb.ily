@@ -17,6 +17,8 @@
   (normalize-path
    (location-extract-path (*location*))))
 
+\include "jazzchords.ily"
+
 \include "titling-init.ly"
 
 \header {
@@ -372,25 +374,25 @@ SATB_Solmisasi = {
       #(if Global Global (empty-music))
     }
     %}
-    <<
-      \new ChordNames {
-        #(if Chords Chords (empty-music))
-      }
-      \make-one-solmisasi-voice-vocal-staff "Solo"
-      \new SolmisasiChoirStaff <<
-        \make-one-solmisasi-voice-vocal-staff "Descant"
-        %%
-        \make-one-solmisasi-voice-vocal-staff "Women"
-        %%
-        \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Soprano"
-        \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Alto"
-        \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Tenor"
-        \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Bass"
-        %%
-        \make-one-solmisasi-voice-vocal-staff "Men"
-      >>
-      \make-one-solmisasi-voice-vocal-staff "Intro"
+    #(if Chords
+         #{
+           \new ChordNames { \Chords }
+         #}
+         (empty-music))
+    \make-one-solmisasi-voice-vocal-staff "Solo"
+    \new SolmisasiChoirStaff <<
+      \make-one-solmisasi-voice-vocal-staff "Descant"
+      %%
+      \make-one-solmisasi-voice-vocal-staff "Women"
+      %%
+      \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Soprano"
+      \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Alto"
+      \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Tenor"
+      \make-one-solmisasi-voice-vocal-staff #AlwaysShortInstrumentName "Bass"
+      %%
+      \make-one-solmisasi-voice-vocal-staff "Men"
     >>
+    \make-one-solmisasi-voice-vocal-staff "Intro"
   >>
   \label #'lastPage
 }

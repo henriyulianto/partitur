@@ -39,6 +39,8 @@ Global = {
     \disallowLineBreak
     \disallowPageBreak
     \pseudoIndents #5.3 #23
+    \section
+    \tweak extra-offset #'(-3 . -3.9)\sectionLabel \markup\smaller "Intro:"
     \partial 4 r4 R1*4 \break
     %\once \override Score.TimeSignature.break-visibility = #begin-of-line-visible
     s1*6 \break
@@ -66,8 +68,8 @@ Global = {
 }
 
 %% INTRO
+IntroInstrumentName = "Intro:"
 IntroMusic = {
-  \set Staff.instrumentName = \markup \bold "Intro:"
   \numericTimeSignature
   \tag #'notangka { \hide Staff.TimeSignature }
   \time 4/4
@@ -527,3 +529,7 @@ SopranoMidiInstrument = "flute"
 AltoMidiInstrument = "oboe"
 TenorMidiInstrument = "clarinet"
 BassMidiInstrument = "bassoon"
+
+\paper {
+  ShortIndentSolmisasi = 9.25\mm
+}
