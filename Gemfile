@@ -11,4 +11,4 @@ gem "just-the-docs", "0.10.1" # pinned to the current release
 gem "csv"
 gem "base64"
 gem "json"
-gem 'wdm', '>= 0.1.0' if Gem.win_platform?
+# gem 'wdm', '>= 0.1.0' if Gem.win_platform?
