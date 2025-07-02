@@ -37,6 +37,7 @@
       "Intro"
       "Men"
       "MenDivided"
+      "Melody"
       "Piano"
       "PianoLH"
       "PianoRH"

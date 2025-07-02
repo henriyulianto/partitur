@@ -296,6 +296,8 @@ SATB_Solmisasi_Layout =
   \context {
     \Score
     %\override BarNumber.font-shape = #'upright
+    \override RehearsalMark.stencil =
+    #(make-stencil-boxer 0.15 0.5 ly:text-interface::print)
   }
   \context {
     \SolmisasiTimeAndKeySignature
