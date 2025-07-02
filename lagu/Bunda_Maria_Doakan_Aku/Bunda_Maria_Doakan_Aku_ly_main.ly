@@ -140,8 +140,8 @@ WomenMusic = {
   \temporary \override Beam.extra-offset = #'(0 . 0.4)
   e'8 -\< -\tweak self-alignment-X #-0.2 ^\mp e'8 e'8   e'8 d'8 \! e'8-\> f'8  g'8 | % 7
   e'2.\! r8[ \set stemLeftBeamCount = #2 \set stemRightBeamCount = #2 r16 c'16 | % 8
-  g'8 g'8 g'8 g'8 f'8( g'16) a'8. f'16 g'16 ~ | % 9
-  g'2. r4 | % 10
+  g'8 g'8 g'8 g'8 f'8( g'16) a'8. f'16 g'16 ( | % 9
+  g'2.) r4 | % 10
   f'8^\markup\italic "poco staccato" g'8 \tweak transparent ##t ~ \tuplet 3/2 {
     \dot g'8 f'8 e'8
   }
@@ -152,8 +152,8 @@ WomenMusic = {
   e'2 | % 12
   d'8\< e'16 f'8.
   d'16\! b8. <>\>  b16
-  c'8  d'16\tweak transparent ##t ~ \dot d'16  e'16 ~ | % 13
-  e'2.\! r4 | % 14
+  c'8  d'16\tweak transparent ##t ~ \dot d'16  e'16 ( | % 13
+  e'2.)\! r4 | % 14
   a'8 a'8 a'8 g'8 f'2 | % 15
   g'8 a'16 g'8.
   f'8 e'2 | % 16
@@ -168,11 +168,12 @@ SopranoMusic = {
   s1*6
   s1*12
   \repeat segno 2 {
+    \crescHairpin \dimHairpin
     \temporary \override Beam.extra-offset = #'(0 . 0.4)
     e'8-\< -\tweak self-alignment-X #-0.2 -\mp e'8 e'8 e'4 \! d'16 -\> e'16 f'8 g'8  | % 19
     e'2.\! r8[ \set stemLeftBeamCount = #2 \set stemRightBeamCount = #2 r16 c'16 | % 8
-    g'8 g'8 g'8 g'8 f'8 g'16 a'8. f'16 g'16 ~ | % 21
-    g'1 | % 22
+    g'8 g'8 g'8 g'8 f'8 g'16 a'8. f'16 g'16 ( | % 21
+    g'1) | % 22
     f'8^\markup\italic "poco staccato" g'8 \tweak transparent ##t ~ \tuplet 3/2 {
       \dot g'8 f'8 e'8
     }

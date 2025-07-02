@@ -12,7 +12,7 @@ workInfo:
   externalURL: ""
 
 files:
-  audioPath: "Puji_dan_Syukur.mp3"
+  audioPath: "Puji_dan_Syukur.m4a"
 
 musicalStructure:
   #silenceAtStartSeconds: 1.2
