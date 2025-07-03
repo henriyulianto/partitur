@@ -319,9 +319,10 @@ body.playing #svg-container>svg a.notangka.active.channel-5>line {
    ============================================================================= */
 
 body.playing:not(.seeking) #svg-container>svg rect[data-bar] {
-  fill: var(--hy-lightblue) !important;
+  fill: var(--hy-lightblue);
   /* Override SVG's fill:none */
-  fill-opacity: 0.3 !important;
+  /* fill: none; */
+  fill-opacity: 0.15;
   filter: none;
 }
 

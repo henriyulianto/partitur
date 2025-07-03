@@ -34,13 +34,16 @@ function processWerkParameter() {
 class MeasureHighlighter {
   constructor() {
     this.structures = new Map();
+    // console.log("🎹 Successfully constructed the MeasureHighlighter object.")
   }
 
   addStructure(name, config) {
+    // console.log("🎹 Setting MeasureHighlighter structure: " + name)
     this.structures.set(name, config);
   }
 
   applyStructure(structureName) {
+    // console.log("🎹 Applying MeasureHighlighter structure: " + structureName);
     this.clearHighlights();
 
     const structure = this.structures.get(structureName);
@@ -53,7 +56,6 @@ class MeasureHighlighter {
     barElements.forEach(element => {
       const barNumber = parseInt(element.getAttribute('data-bar'));
       const style = this.getStyleForBar(barNumber, structure);
-
       if (style) {
         Object.assign(element.style, style);
       }
@@ -62,7 +64,7 @@ class MeasureHighlighter {
 
   getStyleForBar(barNumber, structure) {
     if (structure.type === 'alternating') {
-      const colorIndex = (barNumber - 1) % structure.colors.length;
+      const colorIndex = Math.abs((barNumber - 1) % structure.colors.length);
       return {
         fill: structure.colors[colorIndex],
         fillOpacity: structure.opacity || '0.3'
@@ -152,6 +154,7 @@ function initializeMeasureHighlighter() {
 }
 
 function updateMeasureControlsVisibility() {
+  console.log("🎹 Updating measure controls visibility...")
   const measureControls = document.getElementById('measure-controls');
   
   // Always hide measure controls since it's experimental
@@ -178,11 +181,13 @@ function updateMeasureControlsVisibility() {
       option.value = name;
       option.textContent = measureHighlighter.getStructureDisplayName(name);
       select.appendChild(option);
+      measureHighlighter.applyStructure(name);
     });
 
     // Add event listener if not already added (for potential debugging use)
     if (!select.hasAttribute('data-listener-added')) {
       select.addEventListener('change', (e) => {
+        console.log("🎹 Adding CHANGE event listener.")
         if (e.target.value && measureHighlighter) {
           measureHighlighter.applyStructure(e.target.value);
         } else if (measureHighlighter) {
@@ -191,6 +196,7 @@ function updateMeasureControlsVisibility() {
       });
       select.setAttribute('data-listener-added', 'true');
     }
+
   }
 }
 
@@ -395,13 +401,13 @@ async function loadWorkContent(workId, isInitialLoad = false) {
     initializeMeasureHighlighter();
 
     // 8. Update navigation state if navigation is initialized
-    if (typeof window.getBWVNavigation === 'function') {
-      const nav = window.getBWVNavigation();
-      if (nav) {
-        nav.updateCurrentWork(workId);
-        nav.updateActiveState();
-      }
-    }
+    // if (typeof window.getBWVNavigation === 'function') {
+    //   const nav = window.getBWVNavigation();
+    //   if (nav) {
+    //     nav.updateCurrentWork(workId);
+    //     nav.updateActiveState();
+    //   }
+    // }
 
     // 9. Update UI state (only reset highlights if not initial load)
     if (isInitialLoad) {
@@ -415,7 +421,7 @@ async function loadWorkContent(workId, isInitialLoad = false) {
     }
     
     checkScrollButtonVisibility();
-    positionButtons();
+    // positionButtons();
 
     // Hide loading (only if we showed it)
     if (loadingElement && !isInitialLoad) {

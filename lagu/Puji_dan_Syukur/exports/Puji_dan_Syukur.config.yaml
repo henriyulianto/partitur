@@ -21,8 +21,6 @@ musicalStructure:
   lastMeasureDuration: 4/4
   visualLeadTimeSeconds: 0.1
 
-# Example YAML structure for measure highlighters in bwv1006.config.yaml
-
 measureHighlighters:
   # line-breaks:
     # name: "Structure"  # Display name for UI
@@ -37,8 +35,8 @@ measureHighlighters:
   alternating:
     name: "Alternating Colors"
     type: alternating
-    colors: [lightblue, lightgreen, lightyellow, lightpink]
-    opacity: 0.25
+    colors: [lightskyblue, lightsalmon, lightgreen, lightpink]
+    opacity: 0.2
   
   # harmonic:
     # name: "Harmonic Analysis"
