@@ -128,7 +128,7 @@ make-one-solmisasi-voice-staff =
                       (if always-short
                           (markup #:right-column
                                   (#:with-dimensions-from
-                                   "N"
+                                   "A"
                                    (#:center-align (substring name 0 1))))
                           name))
                   "")
@@ -139,17 +139,17 @@ make-one-solmisasi-voice-staff =
                    (shortInstrName
                     (markup #:right-column
                             (#:with-dimensions-from
-                             "N"
+                             "A"
                              (#:center-align shortInstrName))))
                    (instrName
                     (markup #:right-column
                             (#:with-dimensions-from
-                             "N"
+                             "A"
                              (#:center-align (substring instrName 0 1)))))
                    (else
                     (markup #:right-column
                             (#:with-dimensions-from
-                             "N"
+                             "A"
                              (#:center-align (substring name 0 1))))))
                   "")
            }
@@ -190,7 +190,7 @@ make-one-pseudo-solmisasi-voice-staff =
                       (if always-short
                           (markup #:right-column
                                   (#:with-dimensions-from
-                                   "N"
+                                   "A"
                                    (#:center-align (substring name 0 1))))
                           name))
                   "")
@@ -201,17 +201,17 @@ make-one-pseudo-solmisasi-voice-staff =
                    (shortInstrName
                     (markup #:right-column
                             (#:with-dimensions-from
-                             "N"
+                             "A"
                              (#:center-align shortInstrName))))
                    (instrName
                     (markup #:right-column
                             (#:with-dimensions-from
-                             "N"
+                             "A"
                              (#:center-align (substring instrName 0 1)))))
                    (else
                     (markup #:right-column
                             (#:with-dimensions-from
-                             "N"
+                             "A"
                              (#:center-align (substring name 0 1))))))
                   "")
            }
@@ -273,7 +273,7 @@ make-one-pseudo-solmisasi-voice-vocal-staff =
             layout props
             #{
               \markup \concat {
-                \with-dimensions-from "N" #sname
+                \with-dimensions-from "A" #sname
                 .
               }
             #}))
@@ -296,6 +296,7 @@ Bookpart_NotBalok = ##f
 CetakWatermark = ##f
 AlwaysShortInstrumentName = ##f
 TransposeDownForStandard = ##f
+UnfoldBarNumbers = ##f
 \paper {
   IndentSolmisasi = ##f
   ShortIndentSolmisasi = ##f

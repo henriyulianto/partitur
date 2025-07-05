@@ -38,7 +38,7 @@ measureHighlighters:
     name: "Alternating Colors"
     type: alternating
     colors: [lightskyblue, lightsalmon, lightgreen, lightpink]
-    opacity: 0.2
+    opacity: 0.25
   
   # harmonic:
     # name: "Harmonic Analysis"

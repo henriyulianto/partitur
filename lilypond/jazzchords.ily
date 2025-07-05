@@ -23,13 +23,13 @@
                ;; Otherwise, handle adding the flat symbol
                (make-line-markup
                 (list
-                 (make-hspace-markup 0.1)
+                 (make-hspace-markup 0.0)
                  ;(make-small-markup (make-raise-markup 0.4
                  "b"))
                ;; or handle adding the sharp symbol
                (make-line-markup
                 (list
-                 (make-hspace-markup 0.1)
+                 (make-hspace-markup 0.0)
                  ;(make-small-markup (make-raise-markup 0.7
                  "#"))))))))
 

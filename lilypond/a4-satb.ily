@@ -300,6 +300,8 @@ SATB_Solmisasi_Layout =
     %\override BarNumber.font-shape = #'upright
     \override RehearsalMark.stencil =
     #(make-stencil-boxer 0.15 0.5 ly:text-interface::print)
+    #(if UnfoldBarNumbers
+         (ly:parser-include-string "\\consists \\Unfold_bar_numbers_engraver"))
   }
   \context {
     \SolmisasiTimeAndKeySignature
@@ -323,16 +325,16 @@ SATB_Solmisasi_Layout =
   \context {
     \SolmisasiVoice
     \override NoteHead.font-family = #'serif
-    %\override NoteHead.font-size = #0.25
+    \override NoteHead.font-size = #0.25
     \override Rest.font-family = #'serif
-    %\override Rest.font-size = #0.25
+    \override Rest.font-size = #0.25
     \override DynamicLineSpanner.outside-staff-priority = ##f
     \override DynamicLineSpanner.Y-offset = #3.7
     \override Hairpin.thickness = #0.9
     \override Tie.thickness = #2.7
     \override Tie.line-thickness = #0.4
-    \override Slur.thickness = #2.7
-    \override Slur.line-thickness = #0.4
+    \override Slur.thickness = #2.0
+    %\override Slur.line-thickness = #0.4
     \override Slur.ratio = #0.275
     \override PhrasingSlur.thickness = #2.7
     \override PhrasingSlur.line-thickness = #0.4
@@ -347,14 +349,14 @@ SATB_Solmisasi_Layout =
     %\override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding = #0.2
     \override VerticalAxisGroup.staff-affinity = #UP
     \override LyricHyphen.Y-offset = #0.2
-    \override LyricHyphen.minimum-distance = #2.0
+    %\override LyricHyphen.minimum-distance = #2.0
     % \override LyricText.layer = #-2
     % \override LyricText.whiteout = #2
     % \override LyricText.whiteout-style = #'outline
     \override LyricText.word-space = #1
-    \override LyricExtender.layer = -4
-    \override LyricHyphen.layer = #-3
-    \override LyricHyphen.minimum-distance = #0.4
+    %\override LyricExtender.layer = -4
+    %\override LyricHyphen.layer = #-3
+    %\override LyricHyphen.minimum-distance = #0.4
   }
   \context {
     \ChordNames
@@ -368,12 +370,12 @@ SATB_Solmisasi_Layout =
 
 SATB_Solmisasi = {
   <<
-    %\new SolmisasiTimeAndKeySignature {
-    \solmisasiMusic {
-      \keepWithTag #'(solmisasi notangka)
-      #(if Global Global (empty-music))
+    \new SolmisasiTimeAndKeySignature {
+      \solmisasiMusic {
+        \keepWithTag #'(solmisasi notangka)
+        #(if Global Global (empty-music))
+      }
     }
-    %}
     #(if Chords
          #{
            \new ChordNames { \Chords }
@@ -523,7 +525,7 @@ Bookpart_NotBalok = \bookpart {
   }
 }
 
-\include "articulate.ly"
+%\include "articulate.ly"
 
 Bookpart_Midi = \bookpart {
   \conditional #ExportMIDI \score {
