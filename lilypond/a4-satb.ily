@@ -17,8 +17,6 @@
   (normalize-path
    (location-extract-path (*location*))))
 
-\include "jazzchords.ily"
-
 \include "titling-init.ly"
 
 \header {
@@ -148,7 +146,7 @@ watermark = \markup {
 
   % Spacing
   system-system-spacing.basic-distance = #8
-  system-system-spacing.padding = #3
+  system-system-spacing.padding = #(if is-svg? 5 3)
   score-markup-spacing.basic-distance = #9
   score-system-spacing =
   #'((basic-distance . 9)
@@ -341,9 +339,9 @@ SATB_Solmisasi_Layout =
   }
   \context {
     \Lyrics
-    \consists Bar_engraver
-    \consists Separating_line_group_engraver
-    \hide BarLine
+    %\consists Bar_engraver
+    %\consists Separating_line_group_engraver
+    %\hide BarLine
     \override VerticalAxisGroup.nonstaff-unrelatedstaff-spacing.padding = #0.75
     \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.basic-distance = #0
     %\override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding = #0.2
@@ -353,17 +351,20 @@ SATB_Solmisasi_Layout =
     % \override LyricText.layer = #-2
     % \override LyricText.whiteout = #2
     % \override LyricText.whiteout-style = #'outline
-    \override LyricText.word-space = #1
+    %\override LyricText.word-space = #1
     %\override LyricExtender.layer = -4
     %\override LyricHyphen.layer = #-3
     %\override LyricHyphen.minimum-distance = #0.4
   }
   \context {
     \ChordNames
+    chordNoteNamer = #JazzChordNames
     chordRootNamer = #JazzChordNames	% update the chord names
     chordNameExceptions = #JazzChords	% update the chord exceptions
     %\override ChordName.fonts.sans = #"Norfolk PlainChords Sans Std"
     \override ChordName.font-size = #-0.5
+    chordChanges = ##t
+    \consists #Bass_changes_equal_root_engraver
     %\override ChordName.font-name = #"lilyjazz-chord"  % use the custom font for displaying the chords
   }
 }
@@ -520,6 +521,15 @@ Bookpart_NotBalok = \bookpart {
       \context {
         \Score
         \consists Metronome_mark_engraver
+      }
+      \context {
+        \ChordNames
+        \consists #Bass_changes_equal_root_engraver
+        chordRootNamer = #JazzChordNames	% update the chord names
+        chordNameExceptions = #JazzChords	% update the chord exceptions
+        %\override ChordName.fonts.sans = #"Norfolk PlainChords Sans Std"
+        \override ChordName.font-size = #-0.5
+        %\override ChordName.font-name = #"lilyjazz-chord"  % use the custom font for displaying the chords
       }
     }
   }

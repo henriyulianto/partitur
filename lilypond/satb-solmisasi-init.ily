@@ -17,6 +17,14 @@
    (location-extract-path (*location*))))
 
 \include "pseudo-indents.ily"
+\include "jazzchords.ily"
+
+#(define staff-family-list
+   (list 'Staff
+         'SolmisasiStaff
+         'SolmisasiVoice
+         'ChordNames))
+\include "globalizeMusic.ily"
 
 %% Includes from bwv-zeug
 \include "tie-attributes.ily"
@@ -280,6 +288,7 @@ make-one-pseudo-solmisasi-voice-vocal-staff =
      mkup))
 
 %% Initialise some variables
+global = #(empty-music)
 Global = ##f
 Chords = ##f
 TimeAndKeySignature = ##f
