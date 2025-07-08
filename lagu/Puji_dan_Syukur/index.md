@@ -1,6 +1,8 @@
 ---
 layout: hyplayer
+titleOnly: Puji dan Syukur
 title: "Puji dan Syukur (SATB)"
+instrument: "SATB"
 workId: Puji_dan_Syukur
 parent: Beranda
 permalink: /Puji_dan_Syukur/

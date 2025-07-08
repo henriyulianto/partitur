@@ -1,6 +1,8 @@
 ---
 layout: hyplayer
+titleOnly: Tuhan Maharahim
 title: "Tuhan Maharahim (SATB)"
+instrument: "SATB"
 workId: Tuhan_Maharahim
 parent: Beranda
 permalink: /Tuhan_Maharahim/

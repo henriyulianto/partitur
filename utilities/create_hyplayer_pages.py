@@ -23,7 +23,9 @@ try:
                 file.close()
                 frontmatter  = f'---\n'
                 frontmatter += f'layout: hyplayer\n'
+                frontmatter += f'titleOnly: {data['workInfo']['title']}\n'
                 frontmatter += f'title: "{data['workInfo']['title']} ({data['workInfo']['instrument']})"\n'
+                frontmatter += f'instrument: "{data['workInfo']['instrument']}"\n'
                 frontmatter += f'workId: {item}\n'
                 frontmatter += f'parent: Beranda\n'
                 frontmatter += f'permalink: /{item}/\n'
@@ -46,6 +48,8 @@ try:
                         frontmatter += f'lyricist: "{data['workInfo']['lyricist']}"\n'
                 if 'additionalInfo' in data['workInfo']:
                     frontmatter += f'additionalInfo: "{data['workInfo']['additionalInfo']}"\n'
+                if 'youtubeURL' in data['workInfo']:
+                    frontmatter += f'youtubeURL: "{data['workInfo']['youtubeURL']}"\n'
                 frontmatter += f'work_type: {data['workInfo']['workType']}\n'
                 pdfPath = f'lagu/{item}/exports/{item}.pdf'
                 if 'pdfPath' in data['files']:

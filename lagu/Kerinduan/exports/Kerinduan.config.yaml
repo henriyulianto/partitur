@@ -9,6 +9,7 @@ workInfo:
   workType: "Salinan" # Komposisi | Aransemen | Salinan
   workId: "Kerinduan"
   movementName: "SATB"
+  youtubeURL: "https://youtu.be/OfKrqv7lfOg?si=EiwFTLIrLE8Jah8O"
   externalURL: ""
 
 files:
