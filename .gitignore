@@ -74,4 +74,5 @@ lagu/*/*
 !lagu/*/*.ily
 !lagu/*/index.md
 !lagu/*/exports
-.ruby-version
+#.ruby-version
+Gemfile.win
