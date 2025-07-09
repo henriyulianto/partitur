@@ -84,6 +84,7 @@ GEM
     terminal-table (3.0.2)
       unicode-display_width (>= 1.1.1, < 3)
     unicode-display_width (2.6.0)
+    wdm (0.2.0)
     webrick (1.9.1)
 
 PLATFORMS
@@ -97,6 +98,7 @@ DEPENDENCIES
   json
   just-the-docs (= 0.10.1)
   logger
+  wdm (>= 0.1.0)
   webrick
 
 BUNDLED WITH

@@ -18,8 +18,8 @@ musicalStructure:
   #silenceAtStartSeconds: 0.1
   totalDurationSeconds: 259.18
   totalMeasures: 126
-  lastMeasureDuration: 4/4
-  visualLeadTimeSeconds: 0.1
+  lastMeasureDuration: 1/4
+  visualLeadTimeSeconds: 0.0
 
 # Example YAML structure for measure highlighters in bwv1006.config.yaml
 

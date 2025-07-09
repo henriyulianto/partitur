@@ -216,7 +216,7 @@ WomenMusic = {
   \break
   %\break | % 104
   gis'8 gis'16 gis'8 gis'16 \tweak stencil ##f ~ \dot gis'16 gis'8 gis'16 \tweak stencil ##f ~ \dot gis'16 gis'8 gis'16 \tweak stencil ##f ~ \dot gis'8  | % 105
-  gis'8 gis'16 gis'16 r4 r2 \bar "|."
+  gis'8 gis'16 gis'16 \bar "|."
 }
 
 MenInstrumentName = "II"
@@ -286,7 +286,7 @@ MenMusic = {
   cis'8 cis'16 cis'8 cis'16 \tweak stencil ##f ~ \dot cis'16 cis'8 cis'16 \tweak stencil ##f ~ \dot cis'16 cis'8 cis'16 \tweak stencil ##f ~ \dot cis'8 | % 101
   b8 cis'16 b1*9/16 r4 | % 102
   cis'8 cis'16 cis'8 cis'16 \tweak stencil ##f ~ \dot cis'16 cis'8 cis'16 \tweak stencil ##f ~ \dot cis'16 cis'8 cis'16 \tweak stencil ##f ~ \dot cis'8  | % 105
-  cis'8 cis'16 cis'16 r4 r2 \bar "|."
+  cis'8 cis'16 cis'16 \bar "|."
 }
 
 Chords = \chordmode {
@@ -403,7 +403,7 @@ Chords = \chordmode {
     a2/+b b2:7 | % 102
   }
   | % 104
-  a1/+b s1
+  a1/+b s4
 }
 
 % Verse
