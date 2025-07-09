@@ -10,7 +10,7 @@ composer: "Grego Julius"
 arranger: "Chrisantyo Lucas (SATB), Henri Yulianto (Musik)"
 composer_and_lyricist: "Grego Julius"
 youtubeURL: "https://youtu.be/U2duWOF_yMk?si=JNl1mzDdyZnafJ0r"
-work_type: Salinan
+work_type: Aransemen (Musik)
 pdf_path: "lagu/Bunda_Maria_Doakan_Aku/exports/Bunda_Maria_Doakan_Aku.pdf"
 ---
 

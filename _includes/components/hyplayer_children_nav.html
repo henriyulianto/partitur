@@ -84,14 +84,14 @@
   <li>
     <a href="{{ nav_child.url | relative_url }}" style="font-weight: bold;">{{ nav_child.title }}</a>
     {%- if nav_child.work_type -%}
-      {% if nav_child.work_type == 'Salinan' %}
+      {% if nav_child.work_type contains 'Salinan' %}
         {%- assign label_class = 'label label-yellow' -%}
-      {% elsif nav_child.work_type == 'Aransemen' %}
+      {% elsif nav_child.work_type contains 'Aransemen' %}
         {%- assign label_class = 'label label-green' -%}
-      {% elsif nav_child.work_type == 'Komposisi' %}
+      {% elsif nav_child.work_type contains 'Komposisi' %}
         {%- assign label_class = 'label label-purple' -%}
       {% endif %}
-      <span class="{{ label_class }}">{{ nav_child.work_type }}</span>
+      <span class="{{ label_class }}" style="vertical-align: bottom !important;">{{ nav_child.work_type }}</span>
     {%- endif -%}<br>
     <blockquote style="line-height: 1.3 !important;">
       {%- if nav_child.composer_and_arranger_and_lyricist -%}
@@ -108,7 +108,7 @@
       {%- endif -%} 
       {%- if nav_child.arranger_and_lyricist -%}
         &nbsp;|&nbsp;<span class="fs-3">Syair dan aransemen: {{ nav_child.arranger_and_lyricist }}</span>
-      {%- else -%}
+      {%- elsif nav_child.arranger -%}
         &nbsp;|&nbsp;<span class="fs-3">Aransemen: {{ nav_child.arranger }}</span>
       {%- endif -%}
       {%- if nav_child.additionalInfo -%}

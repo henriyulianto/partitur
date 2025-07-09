@@ -469,7 +469,10 @@ Bookpart_NotAngka = \bookpart {
     \keepWithTag #'(solmisasi notangka)
     #(if have-music
          (if is-svg?
-             #{ \unfoldRepeats << \SATB_Solmisasi >> #}
+             #{
+               \unfoldRepeats
+               << \SATB_Solmisasi >>
+             #}
              #{ << \SATB_Solmisasi >> #})
          #{ { } #} )
     \layout {
