@@ -10,5 +10,6 @@ composer: "Henri Yulianto"
 composer_and_arranger: "Henri Yulianto"
 composer_and_arranger_and_lyricist: "Henri Yulianto"
 work_type: Komposisi
+pdf_path: "lagu/Bersama_Kristus/exports/Bersama_Kristus.pdf"
 ---
 
