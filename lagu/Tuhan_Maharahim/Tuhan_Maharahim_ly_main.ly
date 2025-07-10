@@ -1,5 +1,5 @@
 \version "2.25.26"
-% -*- master: test.ly;
+% -*- master: Tuhan_Maharahim.ly;
 
 %% VARIABLES
 EngraveNotAngka = ##t
@@ -11,59 +11,48 @@ CetakWatermark = ##f
 AlwaysShortInstrumentName = ##t
 
 Global = {
-  \disallowLineBreak
-  \omit Score.TimeSignature
-  \numericTimeSignature
-  \time 4/4
-  \omit KeySignature
-  \key bes \major
-  \once \override Score.MetronomeMark.X-offset = #1.5
-  \tempo \markup {
-    \concat {
-      \rhythm { 8.[ 16] } " = " \rhythm { \tuplet 3/2 { 4 8 } }
-      "  "
-    }
-  } 4 = 100
-  \set Score.currentBarNumber = #0
-  \tag #'notangka { \disallowPageBreak }
-  \tag #'notangka { \partial 4 s4 }
-  \tag #'notbalok { \partial 16 s16 }
-  \set Score.currentBarNumber = #1
-  s1*5
-  s2.
-  \pseudoIndents \markuplist {
-    \with-dimension #X #'(0 . 2.1)
-    \center-align "S"
-    \with-dimension #X #'(0 . 2.1)
-    \center-align "A"
-    \with-dimension #X #'(0 . 2.1)
-    \center-align "T"
-    \with-dimension #X #'(0 . 2.1)
-    \center-align "B"
-  } 0 35
-  \undo \omit Score.TimeSignature
-  \once \hide Score.TimeSignature
-  \time 4/4
-  \partial 4 s4
-  s1*7
-  s2.
+  <<
+    \disallowLineBreak
+    \disallowPageBreak
+    \omit Score.TimeSignature
+    \numericTimeSignature
+    \omit KeySignature
+    \key bes \major
+    \once \override Score.MetronomeMark.X-offset = #1.5
+    \tempo \markup {
+      \concat {
+        \rhythm { 8.[ 16] } " = " \rhythm { \tuplet 3/2 { 4 8 } }
+        "  "
+      }
+    } 4 = 100
+  >>
+  %\set Score.currentBarNumber = #0
+  %\partial 4 s4
+  %\tag #'midi { \partial 16 s16 }
+  %\set Score.currentBarNumber = #1
+
+  %\undo \omit Score.TimeSignature
+  %   \once \hide Score.TimeSignature
+  %   %\time 4/4
+  %   %\partial 4
+  %   s4
+  %   s1
+  %   s1
+  %   s1*7
+  %   s2. \bar "|."
 }
 
 SopranoMusic = {
   % \set Staff.instrumentName = #"S/T"
   %   \set Staff.shortInstrumentName = #"S/T"
   \numericTimeSignature
+  \key bes \major
+  \set Score.currentBarNumber = 0
+  \time 1/4
+  r8^\markup "(Bisa diganti duet T+B, atau ST+AB)"
+  \set stemRightBeamCount = #2
+  r16 f''16 |
   \time 4/4
-  %\key bes \major
-  \tag #'notangka {
-    \partial 4
-    r8^\markup "(Bisa diganti duet T+B, atau ST+AB)"
-    \set stemRightBeamCount = #2
-    r16 f''16
-  }
-  \tag #'notbalok {
-    \partial 16 f''16
-  } |
   f''8.  f''16  f''8.  ees''16  d''8.
   f''16  bes''8.  c'''16 | % 3
   d'''8.  d'''16  d'''8.  c'''16
@@ -80,6 +69,16 @@ SopranoMusic = {
   f''16  bes''8.  c'''16 | % 7
   d'''8.  d'''16  d'''8.  c'''16
   bes''4 \break
+  \pseudoIndents \markuplist {
+    \with-dimension #X #'(0 . 2.9)
+    \center-align "S"
+    \with-dimension #X #'(0 . 2.9)
+    \center-align "A"
+    \with-dimension #X #'(0 . 2.9)
+    \center-align "T"
+    \with-dimension #X #'(0 . 2.9)
+    \center-align "B"
+  } 0 35
   bes''4 | % 8
   c'''4  c'''4  bes''4  a''4 | % 9
   %\omit Tie
@@ -100,17 +99,9 @@ SopranoMusic = {
 
 AltoMusic = {
   \numericTimeSignature
-  \time 4/4
-  %\key bes \major
-  \tag #'notangka {
-    \partial 4
-    r8 \set stemRightBeamCount = #2
-    r16 d''16
-  }
-  \tag #'notbalok {
-    \partial 16 d''16
-  }
-  | % 2
+  \key bes \major
+  r8 \set stemRightBeamCount = #2
+  r16 d''16 | % 2
   d''8.  d''16  d''8.  c''16  bes'8.
   c''16  d''8.  ees''16 | % 3
   f''8.  f''16  f''8.  ees''16  d''4
@@ -142,35 +133,10 @@ AltoMusic = {
 
 TenorMusic = {
   \numericTimeSignature
-  \time 4/4
-  %\key bes \major
-  \silence {
-    \tag #'notangka {
-      \partial 4
-      r8
-      \set stemRightBeamCount = #2
-      r16 f'16
-    }
-    \tag #'notbalok {
-      \partial 16 f'16
-    }
-    |
-    f'8.  f'16  f'8.  ees'16  d'8.
-    f'16  bes'8.  c''16 | % 3
-    d''8.  d''16  d''8.  c''16
-    bes'4
-    bes'8.  a'16 | % 4
-    g'8.  g'16  g'8.  a'16  bes'8.
-    a'16  bes'8.  g'16 | % 5
-    f'8.  g'16  f'8.  d'16  f'4
-    r8
-    \set stemRightBeamCount = #2
-    r16 f'16 | % 6
-    f'8.  f'16  f'8.  ees'16  d'8.
-    f'16  bes'8.  c''16 | % 7
-    d''8.  d''16  d''8.  c''16
-    bes'4
-  }
+  \key bes \major
+  s4
+  s1*5
+  s2.
   d''4 | % 8
   ees''4  ees''4  d''4  c''4 | % 9
   bes'2. r4 \bar "||"
@@ -189,32 +155,10 @@ TenorMusic = {
 
 BassMusic = {
   \numericTimeSignature
-  \time 4/4
-  %\key bes \major
-  \silence {
-    \tag #'notangka {
-      \partial 4
-      r8 \set stemRightBeamCount = #2
-      r16 d'16
-    }
-    \tag #'notbalok {
-      \partial 16 d'16
-    }
-    | % 2
-    d'8.  d'16  d'8.  c'16  bes8.
-    c'16  d'8.  ees'16 | % 3
-    f'8.  f'16  f'8.  ees'16  d'4
-    d'8.  d'16 | % 4
-    ees'8.  ees'16  ees'8.  f'16  g'8.
-    f'16  g'8.  ees'16 | % 5
-    d'8.  ees'16  d'8.  bes16  d'4 r8
-    \set stemRightBeamCount = #2 r16
-    d'16 | % 6
-    d'8.  d'16  d'8.  c'16  bes8.
-    c'16  d'8.  ees'16 | % 7
-    f'8.  f'16  f'8.  ees'16
-    d'4
-  }
+  \key bes \major
+  s4
+  s1*5
+  s2.
   d'4 | % 8
   ees'8. (  d'16 )  c'4  f'4  f'4
   | % 9
@@ -267,7 +211,7 @@ BassLyricsOne = \lyricmode {
 
 BassLyricsTwo =  \lyricmode {
   \syairDiKiri bim -- bing lang -- kah ka -- mi. __
-  \RefLyrics
+  %\RefLyrics
 }
 
 SopranoMidiInstrument = "flute"

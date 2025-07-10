@@ -7,7 +7,8 @@
 \include "satb-solmisasi-init.ily"
 
 %% MUSIC DATA
-\include "Bersama_Yesus_ly_main.ly"
+\include #(ly:format "Bersama_Yesus_ly_main~a.ly"
+                     (if is-svg? "_svg" ""))
 
 \header {
   judul = "Bersama Yesus"

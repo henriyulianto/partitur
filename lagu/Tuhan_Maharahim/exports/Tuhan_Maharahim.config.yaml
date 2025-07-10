@@ -19,7 +19,7 @@ musicalStructure:
   totalDurationSeconds: 37.95
   totalMeasures: 16
   lastMeasureDuration: 3/4
-  visualLeadTimeSeconds: 0.5
+  visualLeadTimeSeconds: 0.0
 
 measureHighlighters:
   # line-breaks:

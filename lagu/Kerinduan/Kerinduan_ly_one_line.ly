@@ -9,7 +9,8 @@
 \include "satb-solmisasi-init.ily"
 
 %% MUSIC DATA
-\include "Kerinduan_ly_main.ly"
+\include #(ly:format "Kerinduan_ly_main~a.ly"
+                     (if is-svg? "_svg" ""))
 
 \paper {
   indent = 0

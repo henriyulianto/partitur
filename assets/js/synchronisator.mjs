@@ -65,6 +65,9 @@ export class Synchronisator {
     //   configTitle: this.config.workInfo?.title
     // });
 
+    // MOD: hrefs array
+    this.hrefsArray = [];
+
     this.initialize();
   }
 

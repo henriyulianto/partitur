@@ -35,16 +35,19 @@ IntroMusic = {
   \clef "treble"
   \numericTimeSignature
   \key d \major
-  \time 4/4
+  \time 2/4
+  \set Score.currentBarNumber = 0
   \temporary\override Beam.extra-offset = #'(0 . 0.5)
   s2
+  \bar ""
   \omit Score.SegnoMark
   \omit Score.CodaMark
   \repeat segno 2 {
     \once\omit Score.BarNumber
     \tweak extra-offset #'(0 . 0.5)\mark \markup\smaller\smaller\bold\caps { Intro dan Interlude }
-    \bar ""
-    \partial 2 r8[ a'8 a'8 a'8 |
+    \set Score.currentBarNumber = 0
+    r8[ a'8 a'8 a'8 |
+    \time 4/4
     a'4 r4 r8[ a'8 a'8 a'8 | % 1
     b'4 r4 r8[ b'8 b'8 b'8 | % 2
     cis''4 cis''8 cis''8 d''4 dis''4 | % 3
@@ -103,10 +106,11 @@ SopranoMusic = {
   \clef "treble"
   \numericTimeSignature
   \key d \major
-  \time 4/4
+  \time 2/4
   s2
   \repeat segno 2 {
-    \partial 2 s2
+    s2
+    \time 4/4
     s1*3
     s2
 
@@ -191,10 +195,11 @@ AltoMusic = {
   \clef "treble"
   \numericTimeSignature
   \key d \major
-  \time 4/4
+  \time 2/4
   s2
   \repeat segno 2 {
-    \partial 2 s2
+    s2
+    \time 4/4
     s1*3
     s2
 
@@ -287,10 +292,11 @@ TenorMusic = {
   \clef "treble_8"
   \numericTimeSignature
   \key d \major
-  \time 4/4
+  \time 2/4
   s2
   \repeat segno 2 {
-    \partial 2 s2
+    s2
+    \time 4/4
     s1*3
     s2
 
@@ -377,10 +383,11 @@ BassMusic = {
   \clef "bass"
   \numericTimeSignature
   \key d \major
-  \time 4/4
+  \time 2/4
   s2
   \repeat segno 2 {
-    \partial 2 s2
+    s2
+    \time 4/4
     s1*3
     s2
 

@@ -23,6 +23,7 @@ Global = {
   \override Score.Hairpin.to-barline = ##f
   \override Score.DynamicTextSpanner.dash-fraction = #0.3
   \override Score.DynamicTextSpanner.dash-period = #2.0
+  \once\hide Score.BarNumber
   %\set Score.dalSegnoTextFormatter = #format-dal-segno-text-brief
   \set Score.dalSegnoTextFormatter =
   #(lambda (context repeat-count markups)
@@ -47,8 +48,8 @@ Global = {
   s1*4 \break
   s1*4 \break
   \once\override Score.SegnoMark.X-offset = #-4
-  \once\override Score.SegnoMark.Y-offset = #1.7
-  \once\override Score.SegnoMark.font-size = #3.5
+  \once\override Score.SegnoMark.Y-offset = #3
+  \once\override Score.SegnoMark.font-size = #5
   \repeat segno 2 {
     \set Score.rehearsalMark = #2
     \tweak X-offset #-2.1 \tweak extra-offset #'(0 . -0.5) \mark\default

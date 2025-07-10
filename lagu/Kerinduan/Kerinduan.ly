@@ -10,7 +10,8 @@
 \include "satb-solmisasi-init.ily"
 
 %% MUSIC DATA
-\include "Kerinduan_ly_main.ly"
+\include #(ly:format "Kerinduan_ly_main~a.ly"
+                     (if is-svg? "_svg" ""))
 
 \header {
   judul = "K e r i n d u a n"

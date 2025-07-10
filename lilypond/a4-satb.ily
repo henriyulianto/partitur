@@ -133,7 +133,7 @@ watermark = \markup {
   % Margins and indents
   left-margin   = 15\mm
   right-margin  = 15\mm
-  top-margin    = 12.7\mm
+  top-margin    = #(if is-svg? 0 (* 12.7 mm))
   bottom-margin = 12.7\mm
   indent        = 7.5\mm
   short-indent  = 7.5\mm
@@ -238,13 +238,19 @@ watermark = \markup {
              }
            }
            \if \on-first-page-of-part {
-             \column {
-               \fill-line {
-                 ""
-                 ""
-                 \box \pad-markup #0.3 \caps \fromproperty #'header:jenis-notasi
-               }
-             }
+             #(if is-svg?
+                  #{
+                    \markup\null
+                  #}
+                  #{
+                    \markup \column {
+                      \fill-line {
+                        ""
+                        ""
+                        \box \pad-markup #0.3 \caps \fromproperty #'header:jenis-notasi
+                      }
+                    }
+                  #})
            }
          }
        #})
@@ -538,15 +544,16 @@ Bookpart_NotBalok = \bookpart {
   }
 }
 
-%\include "articulate.ly"
+\include "articulate.ly"
 
 Bookpart_Midi = \bookpart {
   \conditional #ExportMIDI \score {
     \keepWithTag #'(play midi notbalok)
     #(if have-music
          #{
-           %\articulate
-           \unfoldRepeats <<
+           \articulate
+           \unfoldRepeats
+           <<
              \SATB_NotBalok
              #(if (ly:music? Piano)
                   #{ \Piano #})

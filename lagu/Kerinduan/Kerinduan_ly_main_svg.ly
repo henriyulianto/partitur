@@ -70,15 +70,14 @@ Global = {
     \boxedAlphabetMark #LEFT "Chorus"
   } s1 |
 
-  \repeat volta 2 {
-    s1*5
-    \after 2. \break s1
-    s1*3
-    \alternative {
-      { s1 \break }
-      { s1 }
-    }
-  }
+  s1*5
+  \after 2. \break s1
+  s1*3
+  s1 \break
+  s1*5
+  \after 2. \break s1
+  s1*3
+  s1
   #(if is-svg? #{ \break #})
   s1*3 \bar "|."
 }
@@ -207,21 +206,28 @@ SopranoMusic = {
 
   a'4 -\tweak Y-offset -1.25 -\f |
 
-  \repeat volta 2 {
-    d''2 d''4. cis''8  % 37
-    cis''4 b'2 b'4  % 38
-    b'2 d''4 b'4  % 39
-    cis''2. cis''4  % 40
-    cis''4. e''8 e''4. fis''8  % 41
-    e''8 d''8 d''2 r8[ b'16 cis''16 \temporary\override Staff.BarLine.allow-span-bar = ##f  % 42
-    d''4 d''8 d''4. r8[ b'16 cis''16  % 43
-    d''4 d''8 d''4. r8[ b'16 cis''16  % 44
-    d''4. d''8 d''8 e''4 cis''8  % 45
-    \alternative {
-      { d''2 r4 a'4 \revert Staff.BarLine.allow-span-bar }
-      { d''2 r4 b'8\mp cis''8 \override Staff.BarLine.allow-span-bar = ##f }
-    }
-  }
+  % repeat 1
+  d''2 d''4. cis''8  % 37
+  cis''4 b'2 b'4  % 38
+  b'2 d''4 b'4  % 39
+  cis''2. cis''4  % 40
+  cis''4. e''8 e''4. fis''8  % 41
+  e''8 d''8 d''2 r8[ b'16 cis''16 \temporary\override Staff.BarLine.allow-span-bar = ##f  % 42
+  d''4 d''8 d''4. r8[ b'16 cis''16  % 43
+  d''4 d''8 d''4. r8[ b'16 cis''16  % 44
+  d''4. d''8 d''8 e''4 cis''8  % 45
+  d''2 r4 a'4 \revert Staff.BarLine.allow-span-bar
+  % repeat 2
+  d''2 d''4. cis''8  % 37
+  cis''4 b'2 b'4  % 38
+  b'2 d''4 b'4  % 39
+  cis''2. cis''4  % 40
+  cis''4. e''8 e''4. fis''8  % 41
+  e''8 d''8 d''2 r8[ b'16 cis''16 \temporary\override Staff.BarLine.allow-span-bar = ##f  % 42
+  d''4 d''8 d''4. r8[ b'16 cis''16  % 43
+  d''4 d''8 d''4. r8[ b'16 cis''16  % 44
+  d''4. d''8 d''8 e''4 cis''8  % 45
+  d''2 r4 b'8\mp cis''8 \override Staff.BarLine.allow-span-bar = ##f
 
   d''4. d''8 d''8 e''4\> cis''8 | % 76
   d''1 ( | % 77
@@ -309,22 +315,30 @@ AltoMusic = {
 
   \override Staff.BarLine.allow-span-bar = ##f
 
-  \repeat volta 2 {
-    fis'2 a'4. fis'8 | % 37
-    a'4 g'2 g'4 | % 38
-    gis'2 gis'4 gis'4 | % 39
-    a'2. g'!4 | % 40
-    fis'4. fis'8 fis'4.   fis'8 | % 41
-    fis'8 fis'8 fis'2 r4 \override Staff.BarLine.allow-span-bar = ##t | % 42
-    r4 g'4 fis'4 g'4 | % 43
-    r4 a'4 g'4 a'8 g'16
-    fis'16 \temporary\override Staff.BarLine.allow-span-bar = ##f| % 44
-    e'4. g'8 g'8 g'4 e'8   | % 45
-    \alternative {
-      { d'2 r4 e'4 | \override Staff.BarLine.allow-span-bar = ##t }
-      { d'2 r2 }
-    }
-  }
+  % repeat 1
+  fis'2 a'4. fis'8 | % 37
+  a'4 g'2 g'4 | % 38
+  gis'2 gis'4 gis'4 | % 39
+  a'2. g'!4 | % 40
+  fis'4. fis'8 fis'4.   fis'8 | % 41
+  fis'8 fis'8 fis'2 r4 \override Staff.BarLine.allow-span-bar = ##t | % 42
+  r4 g'4 fis'4 g'4 | % 43
+  r4 a'4 g'4 a'8 g'16
+  fis'16 \temporary\override Staff.BarLine.allow-span-bar = ##f| % 44
+  e'4. g'8 g'8 g'4 e'8   | % 45
+  d'2 r4 e'4 | \override Staff.BarLine.allow-span-bar = ##t
+  % repeat 2
+  fis'2 a'4. fis'8 | % 37
+  a'4 g'2 g'4 | % 38
+  gis'2 gis'4 gis'4 | % 39
+  a'2. g'!4 | % 40
+  fis'4. fis'8 fis'4.   fis'8 | % 41
+  fis'8 fis'8 fis'2 r4 \override Staff.BarLine.allow-span-bar = ##t | % 42
+  r4 g'4 fis'4 g'4 | % 43
+  r4 a'4 g'4 a'8 g'16
+  fis'16 \temporary\override Staff.BarLine.allow-span-bar = ##f| % 44
+  e'4. g'8 g'8 g'4 e'8   | % 45
+  d'2 r2
 
   \override Staff.BarLine.allow-span-bar = ##t
   R1*2
@@ -397,22 +411,30 @@ TenorMusic = {
 
   cis'4\f
 
-  \repeat volta 2 {
-    d'2 d'4. e'8 | % 37
-    e'4 d'2 d'4 | % 38
-    b2 b4 d'4 | % 39
-    e'2. e'4 | % 40
-    cis'4. cis'8 cis'4. cis'8 | % 41
-    e'8 fis'8 fis'2 r4 | % 42
-    r4 d'4 d'4 d'4  | % 43
-    r4 d'4 d'4 d'4 | % 44
-    r8[ g'8 fis'8 d'8 d'8 e'8 e'8 cis'8
-    \temporary\override Staff.BarLine.allow-span-bar = ##f | % 45
-    \alternative {
-      { d'2 r4 cis'4 \revert Staff.BarLine.allow-span-bar }
-      { d'2 r2 }
-    }
-  }
+  % repeat 1
+  d'2 d'4. e'8 | % 37
+  e'4 d'2 d'4 | % 38
+  b2 b4 d'4 | % 39
+  e'2. e'4 | % 40
+  cis'4. cis'8 cis'4. cis'8 | % 41
+  e'8 fis'8 fis'2 r4 | % 42
+  r4 d'4 d'4 d'4  | % 43
+  r4 d'4 d'4 d'4 | % 44
+  r8[ g'8 fis'8 d'8 d'8 e'8 e'8 cis'8
+  \temporary\override Staff.BarLine.allow-span-bar = ##f | % 45
+  d'2 r4 cis'4 \revert Staff.BarLine.allow-span-bar
+  % repeat 2
+  d'2 d'4. e'8 | % 37
+  e'4 d'2 d'4 | % 38
+  b2 b4 d'4 | % 39
+  e'2. e'4 | % 40
+  cis'4. cis'8 cis'4. cis'8 | % 41
+  e'8 fis'8 fis'2 r4 | % 42
+  r4 d'4 d'4 d'4  | % 43
+  r4 d'4 d'4 d'4 | % 44
+  r8[ g'8 fis'8 d'8 d'8 e'8 e'8 cis'8
+  \temporary\override Staff.BarLine.allow-span-bar = ##f | % 45
+  d'2 r2
 
   \override Staff.BarLine.allow-span-bar = ##t
   R1*2
@@ -480,21 +502,28 @@ BassMusic = {
 
   a,4\f
 
-  \repeat volta 2 {
-    d2 fis4. fis8 | % 37
-    g4 g2 g8( fis8) | % 38
-    e2 gis4 e4 | % 39
-    a2. a4 | % 40
-    ais4. ais8 ais4. ais8 | % 41
-    b8 b8 b2 r4 | % 42
-    r4 b4 a4 b4 | % 43
-    r4 fis4 e4 fis4 | % 44
-    e4. e8 a,4 a,8 a,8 | % 45
-    \alternative {
-      { d2 r4 a,4 }
-      { d2 r2 }
-    }
-  }
+  % repeat 1
+  d2 fis4. fis8 | % 37
+  g4 g2 g8( fis8) | % 38
+  e2 gis4 e4 | % 39
+  a2. a4 | % 40
+  ais4. ais8 ais4. ais8 | % 41
+  b8 b8 b2 r4 | % 42
+  r4 b4 a4 b4 | % 43
+  r4 fis4 e4 fis4 | % 44
+  e4. e8 a,4 a,8 a,8 | % 45
+  d2 r4 a,4
+  % repeat 2
+  d2 fis4. fis8 | % 37
+  g4 g2 g8( fis8) | % 38
+  e2 gis4 e4 | % 39
+  a2. a4 | % 40
+  ais4. ais8 ais4. ais8 | % 41
+  b8 b8 b2 r4 | % 42
+  r4 b4 a4 b4 | % 43
+  r4 fis4 e4 fis4 | % 44
+  e4. e8 a,4 a,8 a,8 | % 45
+  d2 r2
   R1*2
   d1 \override Staff.BarLine.allow-span-bar = ##t
 }
