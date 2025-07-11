@@ -5,7 +5,7 @@ workInfo:
   arranger: "Henri Yulianto"
   lyricist: "Henri Yulianto"
   instrument: "2 Suara"
-  notationType: "solmisasi" # solmisasi | standard
+  notationType: "not angka" # not angka | not balok | not kombinasi
   workType: "Komposisi" # Komposisi | Aransemen | Salinan
   workId: "Bersama_Kristus"
   movementName: "2 Suara"

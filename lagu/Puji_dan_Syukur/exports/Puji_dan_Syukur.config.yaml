@@ -5,7 +5,7 @@ workInfo:
   arranger: "Frans Haryadi"
   lyricist: "Binsar Sitompul"
   instrument: "SATB"
-  notationType: "solmisasi" # solmisasi | standard
+  notationType: "not angka" # not angka | not balok | not kombinasi
   workType: "Salinan" # Komposisi | Aransemen | Salinan
   workId: "Puji_dan_Syukur"
   movementName: "SATB"

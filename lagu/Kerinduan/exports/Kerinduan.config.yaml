@@ -5,7 +5,7 @@ workInfo:
   arranger: "William Ias (SATB), Chrisantyo Lucas (Musik)"
   lyricist: "Grego Julius"
   instrument: "SATB"
-  notationType: "solmisasi" # solmisasi | standard
+  notationType: "not angka" # not angka | not balok | not kombinasi
   workType: "Salinan" # Komposisi | Aransemen | Salinan
   workId: "Kerinduan"
   movementName: "SATB"

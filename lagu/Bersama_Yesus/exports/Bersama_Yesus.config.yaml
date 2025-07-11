@@ -5,7 +5,7 @@ workInfo:
   arranger: "Henri Yulianto"
   lyricist: "Grego Julius"
   instrument: "SATB"
-  notationType: "solmisasi" # solmisasi | standard
+  notationType: "not angka" # not angka | not balok | not kombinasi
   workType: "Aransemen" # Komposisi | Aransemen | Salinan
   workId: "Bersama_Yesus"
   movementName: "SATB"

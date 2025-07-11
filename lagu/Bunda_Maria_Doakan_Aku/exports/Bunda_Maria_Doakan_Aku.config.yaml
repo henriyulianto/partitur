@@ -5,7 +5,7 @@ workInfo:
   arranger: "Chrisantyo Lucas (SATB), Henri Yulianto (Musik)"
   lyricist: "Grego Julius"
   instrument: "SATB"
-  notationType: "solmisasi" # solmisasi | standard
+  notationType: "not angka" # not angka | not balok | not kombinasi
   workType: "Aransemen (Musik)" # Komposisi | Aransemen | Salinan
   workId: "Bunda_Maria_Doakan_Aku"
   movementName: "SATB"

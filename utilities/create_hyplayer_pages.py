@@ -48,6 +48,8 @@ try:
                         frontmatter += f'lyricist: "{data['workInfo']['lyricist']}"\n'
                 if 'additionalInfo' in data['workInfo']:
                     frontmatter += f'additionalInfo: "{data['workInfo']['additionalInfo']}"\n'
+                if 'notationType' in data['workInfo']:
+                    frontmatter += f'notationType: "{data['workInfo']['notationType']}"\n'
                 if 'youtubeURL' in data['workInfo']:
                     frontmatter += f'youtubeURL: "{data['workInfo']['youtubeURL']}"\n'
                 frontmatter += f'work_type: {data['workInfo']['workType']}\n'

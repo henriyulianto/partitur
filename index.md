@@ -5,7 +5,7 @@ nav_enabled: true
 permalink: /
 ---
 
-### Repositori Partitur Not Angka - Henri Yulianto
+### Repositori Partitur - Henri Yulianto
 {: .no_toc .text-grey-dk-300 }
 
 - Klik judul lagu untuk membuka laman web **pratinjau partitur not angka**.
