@@ -9,7 +9,7 @@ SolmisasiStaffSize = #18.5
 TwoVoicesPerStaff = ##f
 AlwaysShortInstrumentName = ##t
 UnfoldBarNumbers = ##f
-UnfoldRepeatsForSVG = ##f
+UnfoldRepeatsForSVG = ##t
 
 myPartial =
 #(define-music-function
@@ -44,36 +44,37 @@ SopranoMusic = {
     \time 4/4
     \key f \major
   >>
-  \myPartial 0 { s4 } 4/4 ##f
+  \partial 4 s4
   s1 | % 6
   \time 3/4 s2. | % 7
   %\tweak transparent ##t \mark\default
   \time 4/4 s1 | % 8
-  \myPartial 4 { s2. \bar "||" \break } 1/4 ##f
+  s2.
 
   \repeat volta 3 {
-    \myPartial 4 { c'8 c'8 } 4/4 ##f
+    \bar "||" \break
+    c'8 c'8
     f'4. f'8 g'4 bes'4 | % 6
     \time 3/4 a'4 g'4 a'8 g'8 | % 7
     \time 4/4 c''4. a'8 f'4 g'4 | % 8
-    \myPartial 8 { f'2. } 1/4 ##f
+    f'2.
     \bar "" \break
 
-    \myPartial 8 { c'8 c'8 } 4/4 ##f
+    c'8 c'8
     f'4. f'8 g'4 bes'4 | % 6
     \time 3/4 a'4 g'4 a'8 g'8 | % 7
     \time 4/4 c''4. a'8 f'4 g'4 | % 8
-    \myPartial 12 { f'2. } 1/4 ##f
+    f'2.
     \bar "" \pageBreak
 
-    \myPartial 12 { a'8 a'8 } 4/4 ##f
+    a'8 a'8
     g'4. e'8 f'4 a'4 | % 14
     g'2. a'8 b'8 | % 15
     c''4. c''8 d''4  b'4 | % 16
-    \myPartial 16 { c''2. } 1/4 ##f
+    c''2.
     \bar "" \break
 
-    \myPartial 16 { c''4 } 4/4 ##f
+    c''4
     bes'4. a'8 g'4 a'8  bes'8 | % 18
     c''4. f'8 f'4 f'8 a'8 | % 19
     <<
@@ -96,15 +97,28 @@ SopranoMusic = {
       }
       \volta 3 {
         \unfolded {
-          \tempo 4 = 90
-          c''4
-          \tempo 4 = 74
-          bes'8 a'8
-          \tempo 4 = 76
-          bes'4
-          \tempo 4 = 66
-          g'4 | % 20
-          f'2.
+          <<
+            #(if is-svg?
+                 #{
+                   {
+                     \once \override TextSpanner.bound-details.left.text =
+                     \markup { \bold rit. }
+                     s4*6\startTextSpan
+                     s4\stopTextSpan
+                   }
+                 #})
+            {
+              \tempo 4 = 90
+              c''4
+              \tempo 4 = 74
+              bes'8 a'8
+              \tempo 4 = 76
+              bes'4
+              \tempo 4 = 66
+              g'4 | % 20
+              f'2.
+            }
+          >>
         }
       }
     >>
@@ -363,7 +377,11 @@ PianoLHMusic = <<
 
 % LYRICS
 
-BassLyricsOne = \lyricmode {
+VerseOne = \lyricmode {
+  #(if is-svg?
+       #{
+         \boxedAlphabetMark #LEFT "Bait 1"
+       #})
   \set stanza = "1."
   \syairDiKiri Ma -- ri ki -- ta me -- lam -- bung -- kan
   pu -- ji -- an ba -- gi Al -- lah;
@@ -375,7 +393,11 @@ BassLyricsOne = \lyricmode {
   Ye -- sus Kris -- tus, Tu -- han ki -- ta.
 }
 
-BassLyricsTwo = \lyricmode {
+VerseTwo = \lyricmode {
+  #(if is-svg?
+       #{
+         \boxedAlphabetMark #LEFT "Bait 2"
+       #})
   \set stanza = "2."
   \syairDiKiri Pa -- ra mar -- tir ber -- gi -- rang -- lah
   dan ber -- so -- rak gem -- bi -- ra;
@@ -387,7 +409,11 @@ BassLyricsTwo = \lyricmode {
   yang ber -- zi -- a -- rah di du -- nia.
 }
 
-BassLyricsThree = \lyricmode {
+VerseThree = \lyricmode {
+  #(if is-svg?
+       #{
+         \boxedAlphabetMark #LEFT "Bait 3"
+       #})
   \set stanza = "3."
   \syairDiKiri Ma -- ri ki -- ta me -- nge -- nang -- kan
   ke -- ja -- ya -- an me -- re -- ka;
@@ -397,6 +423,15 @@ BassLyricsThree = \lyricmode {
   \syairDiKiri ber -- sa -- ma me -- mu -- lia -- kan Al -- lah
   da -- lam su -- ka -- ci -- ta sur -- ga.
 }
+
+BassLyricsOne = \lyricmode {
+  \VerseOne
+  #(if is-svg?
+       #{ \lyricmode { \VerseTwo \VerseThree } #}
+       (empty-music))
+}
+BassLyricsTwo = #(if is-svg? #f VerseTwo)
+BassLyricsThree = #(if is-svg? #f VerseThree)
 
 AltoLyricsOne   = \BassLyricsOne
 AltoLyricsTwo   = \BassLyricsTwo
