@@ -337,7 +337,7 @@ SATB_Solmisasi_Layout =
     \override Hairpin.thickness = #0.9
     \override Tie.thickness = #2.7
     \override Tie.line-thickness = #0.4
-    \override Slur.thickness = #2.0
+    \override Slur.thickness = #1.7
     %\override Slur.line-thickness = #0.4
     \override Slur.ratio = #0.275
     \override PhrasingSlur.thickness = #2.7
@@ -345,9 +345,9 @@ SATB_Solmisasi_Layout =
   }
   \context {
     \Lyrics
-    %\consists Bar_engraver
-    %\consists Separating_line_group_engraver
-    %\hide BarLine
+    %     \consists Bar_engraver
+    %     \consists Separating_line_group_engraver
+    %     \hide BarLine
     \override VerticalAxisGroup.nonstaff-unrelatedstaff-spacing.padding = #0.75
     \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.basic-distance = #0
     %\override VerticalAxisGroup.nonstaff-relatedstaff-spacing.padding = #0.2
@@ -373,6 +373,7 @@ SATB_Solmisasi_Layout =
     \consists #Bass_changes_equal_root_engraver
     %\override ChordName.font-name = #"lilyjazz-chord"  % use the custom font for displaying the chords
   }
+  \override Score.SystemStartBar.padding = #0.5
 }
 
 SATB_Solmisasi = {

@@ -53,7 +53,7 @@ SopranoMusic = {
 
   \repeat volta 3 {
     \bar "||" \break
-    c'8 c'8
+    c'8 c'8 \bar "|" |
     f'4. f'8 g'4 bes'4 | % 6
     \time 3/4 a'4 g'4 a'8 g'8 | % 7
     \time 4/4 c''4. a'8 f'4 g'4 | % 8
@@ -132,7 +132,7 @@ AltoMusic = {
   \numericTimeSignature \time 4/4 R1 | % 3
   r2 r4
   \repeat volta 3 {
-    c'8 c'8  % 5
+    \spanBarOff c'8 c'8  % 5
     c'4. c'8 d'4 g'4 | % 6
     \time 3/4 f'4 e'4 d'8 e'8 | % 7
     \numericTimeSignature \time 4/4 f'8 ( g'8 a'8 ) f'8 d'4 c'4 | % 8

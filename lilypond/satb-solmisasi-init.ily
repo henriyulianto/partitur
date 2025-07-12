@@ -4,8 +4,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \version "2.25.26"
 #(define SATB_SOLMISASI_INIT #t)
-#(if (not (eq? 'svg (ly:get-option 'backend)))
-     (ly:set-option 'backend 'cairo))
+% #(if (not (eq? 'svg (ly:get-option 'backend)))
+%      (ly:set-option 'backend 'cairo))
 
 %% Safe include
 #(if (not (defined? 'SOLMISASI_LILY_LOADED))
