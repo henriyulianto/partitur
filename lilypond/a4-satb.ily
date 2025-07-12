@@ -462,6 +462,8 @@ SATB_Midi = {
   >>
 }
 
+Piano = \make-pianostaff
+
 Bookpart_NotAngka = \bookpart {
   \header {
     jenis-notasi = "Not Angka"
@@ -474,20 +476,18 @@ Bookpart_NotAngka = \bookpart {
   \conditional #EngraveNotAngka \score {
     \keepWithTag #'(solmisasi notangka)
     #(if have-music
-         (if is-svg?
+         (if (and is-svg? UnfoldRepeatsForSVG)
              #{
                \unfoldRepeats
-               << \SATB_Solmisasi >>
+               << \SATB_Solmisasi \Piano >>
              #}
-             #{ << \SATB_Solmisasi >> #})
+             #{ << \SATB_Solmisasi \Piano >> #})
          #{ { } #} )
     \layout {
       \SATB_Solmisasi_Layout
     }
   }
 }
-
-Piano = \make-pianostaff
 
 Bookpart_NotBalok = \bookpart {
   \header {

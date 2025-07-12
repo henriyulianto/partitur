@@ -306,6 +306,7 @@ CetakWatermark = ##f
 AlwaysShortInstrumentName = ##f
 TransposeDownForStandard = ##f
 UnfoldBarNumbers = ##f
+UnfoldRepeatsForSVG = ##t
 \paper {
   IndentSolmisasi = ##f
   ShortIndentSolmisasi = ##f

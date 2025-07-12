@@ -89,7 +89,7 @@
       </span>
     {%- endif -%}
     {%- if nav_child.work_type -%}
-      {% if nav_child.work_type contains 'Salinan' %}
+      {% if nav_child.work_type contains 'Salinan' or nav_child.work_type contains 'Transkripsi' %}
         {%- assign label_class = 'label label-yellow' -%}
       {% elsif nav_child.work_type contains 'Aransemen' %}
         {%- assign label_class = 'label label-green' -%}
