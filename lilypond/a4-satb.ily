@@ -302,6 +302,7 @@ SATB_Solmisasi_Layout =
   \context {
     \Score
     %\override BarNumber.font-shape = #'upright
+    metronomeMarkFormatter = #format-metronome-markup-custom
     \override RehearsalMark.stencil =
     #(make-stencil-boxer 0.15 0.5 ly:text-interface::print)
     #(if UnfoldBarNumbers
