@@ -18,6 +18,7 @@
 
 \include "pseudo-indents.ily"
 \include "jazzchords.ily"
+\include "metronome-mark-formatter.ily"
 
 #(define staff-family-list
    (list 'Staff
