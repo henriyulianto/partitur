@@ -2,6 +2,7 @@
 title: Beranda
 layout: hyplayer_frontpage
 nav_enabled: true
+has_children: true
 permalink: /
 ---
 
