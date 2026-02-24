@@ -3,7 +3,7 @@ import { Synchronisator } from './synchronisator.mjs';
 // Import intelligent channel to color mapping (reads from CSS)
 import { createChannelColorMapping, logChannelMapping } from './channel2colour.js';
 
-// Import BWV navigation menu system  
+// Import BWV navigation menu system
 // import { initializeBWVNavigation, adjustBWVButtonLayout } from './menu.js';
 // Import debounce utility
 import debounce from './lodash.build.mjs';
@@ -156,12 +156,12 @@ function initializeMeasureHighlighter() {
 function updateMeasureControlsVisibility() {
   console.log("🎹 Updating measure controls visibility...")
   const measureControls = document.getElementById('measure-controls');
-  
+
   // Always hide measure controls since it's experimental
   if (measureControls) {
     measureControls.style.display = 'none';
   }
-  
+
   // Still initialize the measure highlighter functionality in the background
   // in case it's needed for debugging or future use
   const select = document.getElementById('highlight-select');
@@ -225,14 +225,14 @@ async function loadConfiguration(workId = null) {
     // }
     // workTitleContainer.innerHTML = '';
     // workTitleContainer.appendChild(workTitleElement);
-    // End work title display 
+    // End work title display
 
     const configResponse = await fetch(`${ROOT_LAGU}/${targetWorkId}/exports/${targetWorkId}.config.yaml`);
 
     const yamlText = await configResponse.text();
     CONFIG = jsyaml.load(yamlText);
     const targetWorkTitle = `${CONFIG.workInfo.title} (${CONFIG.workInfo.instrument})`;
-    
+
     const element = document.getElementById('loading-werk');
     if (element) {
       element.innerHTML = `Loading ${targetWorkTitle}...`;
@@ -244,15 +244,20 @@ async function loadConfiguration(workId = null) {
 
     // Update file paths for new unified format
     const basePath = `${ROOT_LAGU}/${targetWorkId}/exports/`;
-    
+
     // Use config values or fall back to default naming convention
     const svgFileName = CONFIG.files.svgPath || `${targetWorkId}.svg`;
     const syncFileName = CONFIG.files.syncPath || `${targetWorkId}.yaml`;
     const audioFileName = CONFIG.files.audioPath || `${targetWorkId}.wav`;
-    
+
     CONFIG.files.svgPath = `${basePath}${svgFileName}`;
     CONFIG.files.syncPath = `${basePath}${syncFileName}`;
     CONFIG.files.audioPath = `${basePath}${audioFileName}`;
+
+    // Handle CDN configuration for archive.org
+    if (CONFIG.cdn?.provider === 'archive.org' && CONFIG.cdn?.identifier) {
+      CONFIG.files.audioPath = `https://archive.org/download/${CONFIG.cdn.identifier}/${audioFileName}`;
+    }
 
     // Store the workId for reference
     CONFIG.workId = targetWorkId;
@@ -314,11 +319,11 @@ let isInitialized = false;
 async function loadWorkContent(workId, isInitialLoad = false) {
   try {
     console.log(`🔄 Loading work content for ${workId}...`);
-    
+
     // Show loading state only if not initial load
     const loadingElement = document.getElementById('loading');
     const svgContainer = document.getElementById("svg-container");
-    
+
     if (loadingElement && !isInitialLoad) {
       loadingElement.classList.remove('d-none');
     }
@@ -337,7 +342,7 @@ async function loadWorkContent(workId, isInitialLoad = false) {
         return r.text();
       }).then(yamlText => {
         const parsed = jsyaml.load(yamlText);
-        
+
         if (!parsed.meta) {
           throw new Error('Sync data missing "meta" section');
         }
@@ -363,7 +368,7 @@ async function loadWorkContent(workId, isInitialLoad = false) {
       sync.cleanup(); // Clean up event listeners
       sync = null;
     }
-    
+
     // Stop current audio (only if not initial load)
     if (!isInitialLoad) {
       audio.pause();
@@ -396,7 +401,7 @@ async function loadWorkContent(workId, isInitialLoad = false) {
 
     // 6. Apply channel colors and other work-specific features
     applyChannelColors(syncData);
-    
+
     // 7. Re-initialize measure highlighter with new config
     initializeMeasureHighlighter();
 
@@ -419,7 +424,7 @@ async function loadWorkContent(workId, isInitialLoad = false) {
     } else {
       updatePlaybackState();
     }
-    
+
     checkScrollButtonVisibility();
     // positionButtons();
 
@@ -429,7 +434,7 @@ async function loadWorkContent(workId, isInitialLoad = false) {
     }
 
     console.log(`✅ Successfully loaded ${workId}: ${sync.getStats().totalNotes} notes, ${sync.barCache.length} bars`);
-    
+
     return true;
 
   } catch (error) {
@@ -444,10 +449,10 @@ function updatePlaybackState() {
   if (currentBarGlobal && sync) {
     currentBarGlobal.innerText = sync.firstBarNumber?.toString() || '1';
   }
-  
+
   // Reset playing state
   setPlayingState(false);
-  
+
   // Reset any active highlights using the correct method name
   if (window.highlighter && typeof window.highlighter.removeAllHighlights === 'function') {
     try {
@@ -489,7 +494,7 @@ function scrollToBar(barNumber) {
 
   const barData = sync.barCache[barNumber];
   if (!barData || !barData.elements || barData.elements.length === 0) return;
-  
+
   const barElements = barData.elements;
 
   let minTop = Infinity, maxBottom = -Infinity;
@@ -618,7 +623,7 @@ async function setup() {
     headerElementGlobal = document.getElementById('header');
     footerElementGlobal = document.getElementById('footer');
     currentBarGlobal = document.getElementById('current_bar');
-    
+
     // Make footer visible
     if (footerElementGlobal) {
       // footerElementGlobal.style.visibility = "visible";
@@ -628,7 +633,7 @@ async function setup() {
 
     // Initialize global highlighter
     window.highlighter = new MusicalHighlighter();
-    
+
     // Initialize BWV navigation menu system FIRST
     // console.log('🚀 Starting BWV navigation initialization...');
     // await initializeBWVNavigation();
@@ -681,7 +686,7 @@ function initEventHandlers() {
   initEventHandlers.initialized = true;
 
   positionButtons();
-  
+
   // Show UI elements
   document.querySelectorAll('#button_scroll_to_top, #bar_spy').forEach(button => {
     button.style.visibility = 'visible';
