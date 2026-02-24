@@ -355,7 +355,7 @@ async function loadConfiguration(workId = null) {
     }
 
     // Check if remote audio file exists
-    await checkAudioFileExists(CONFIG.files.audioPath);
+    // await checkAudioFileExists(CONFIG.files.audioPath);
 
     // Store the workId for reference
     CONFIG.workId = targetWorkId;
