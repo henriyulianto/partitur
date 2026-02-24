@@ -207,6 +207,101 @@ function updateMeasureControlsVisibility() {
 let CONFIG = null;
 let ROOT_LAGU = "/partitur/lagu";
 
+// Audio file existence check with loading overlay
+async function checkAudioFileExists(audioUrl) {
+  showAudioLoadingOverlay(true);
+
+  try {
+    const response = await fetch(audioUrl, { method: 'HEAD' });
+
+    if (!response.ok) {
+      throw new Error(`Audio file not found: ${audioUrl}`);
+    }
+
+    console.log(`✅ Audio file found: ${audioUrl}`);
+  } catch (error) {
+    console.error('❌ Audio file check failed:', error);
+    showAudioError(`Audio file not found: ${audioUrl.split('/').pop()}`);
+    throw error;
+  } finally {
+    showAudioLoadingOverlay(false);
+  }
+}
+
+// Show/hide audio loading overlay
+function showAudioLoadingOverlay(show) {
+  let overlay = document.getElementById('audio-loading-overlay');
+
+  if (show) {
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'audio-loading-overlay';
+      overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+      `;
+      overlay.innerHTML = '<div>🎵 Loading audio from Archive.org...</div>';
+      document.body.appendChild(overlay);
+    }
+    overlay.style.display = 'flex';
+  } else if (overlay) {
+    overlay.style.display = 'none';
+  }
+}
+
+// Show audio error popup
+function showAudioError(message) {
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f44336;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 10000;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  `;
+  errorDiv.innerHTML = `
+    <div style="margin-bottom: 10px;">⚠️ Audio Error</div>
+    <div>${message}</div>
+    <button onclick="this.parentElement.remove()" style="
+      margin-top: 15px;
+      padding: 8px 16px;
+      background: white;
+      color: #f44336;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    ">Close</button>
+  `;
+  document.body.appendChild(errorDiv);
+
+  // Auto-remove after 10 seconds
+  setTimeout(() => {
+    if (errorDiv.parentElement) {
+      errorDiv.remove();
+    }
+  }, 10000);
+}
+
 async function loadConfiguration(workId = null) {
   try {
     // Use provided workId or get from URL
@@ -258,6 +353,9 @@ async function loadConfiguration(workId = null) {
     if (CONFIG.cdn?.provider === 'archive.org' && CONFIG.cdn?.identifier) {
       CONFIG.files.audioPath = `https://archive.org/download/${CONFIG.cdn.identifier}/${audioFileName}`;
     }
+
+    // Check if remote audio file exists
+    await checkAudioFileExists(CONFIG.files.audioPath);
 
     // Store the workId for reference
     CONFIG.workId = targetWorkId;
