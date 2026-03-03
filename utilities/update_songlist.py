@@ -2,10 +2,15 @@ import json
 import os
 from datetime import datetime
 
-json_file_path = '../songlist.json'
+# Get the directory where this script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Get the parent directory (project root)
+project_root = os.path.dirname(script_dir)
+
+json_file_path = os.path.join(project_root, 'songlist.json')
 songlist = []
 songlist_json = {}
-path = '../lagu'
+path = os.path.join(project_root, 'lagu')
 
 try:
     for item in os.listdir(path):
